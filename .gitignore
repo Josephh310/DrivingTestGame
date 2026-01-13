@@ -1,0 +1,16 @@
+# Project place file
+/RojoTreeTemplate.rbxlx
+
+# Roblox Studio lock files
+/*.rbxlx.lock
+/*.rbxl.lock
+
+# Temporary files
+sourcemap.json
+
+# ackage files
+Packages/
+wally.lock
+
+# MacOS grrr
+.DS_STORE

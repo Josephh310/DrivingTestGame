@@ -1,0 +1,62 @@
+{
+  "name": "genrojotree",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "Shared": {
+        "$className": "Folder",
+        "Services": {
+          "$className": "Folder",
+          "PrintService": {
+            "$className": "Folder",
+            "PrintServiceClient": {
+              "$path": "Source/Services/PrintService/Client.luau"
+            },
+            "PrintServiceUtils": {
+              "$path": "Source/Services/PrintService/Utils.luau"
+            }
+          }
+        },
+        "Classes": {
+          "$className": "Folder"
+        },
+        "Modules": {
+          "$className": "Folder"
+        }
+      },
+      "Packages": {
+        "$path": "Packages"
+      },
+      "Interface": {
+        "$path": "Source/Interface"
+      }
+    },
+    "ServerScriptService": {
+      "Server": {
+        "$path": "Source/Startup/Init.server.luau"
+      },
+      "Services": {
+        "$className": "Folder",
+        "PrintService": {
+          "$className": "Folder",
+          "PrintServiceServer": {
+            "$path": "Source/Services/PrintService/Server.luau"
+          }
+        }
+      },
+      "Classes": {
+        "$className": "Folder"
+      },
+      "Modules": {
+        "$className": "Folder"
+      }
+    },
+    "StarterPlayer": {
+      "StarterPlayerScripts": {
+        "Client": {
+          "$path": "Source/Startup/Init.client.luau"
+        }
+      }
+    }
+  }
+}
