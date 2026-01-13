@@ -7,6 +7,4 @@ realm = "shared"
 [dependencies]
 Observers = "sleitnick/observers@0.5.0"
 ProfileStore = "vyon/profilestore@1.0.3"
-Signal = "sleitnick/signal@2.0.3"
 TopbarPlus = "1foreverhd/topbarplus@3.4.0"
-Trove = "sleitnick/trove@1.8.0"
