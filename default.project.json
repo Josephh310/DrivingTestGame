@@ -6,7 +6,13 @@
       "Shared": {
         "$className": "Folder",
         "Services": {
-          "$className": "Folder"
+          "$className": "Folder",
+          "DataService": {
+            "$className": "Folder",
+            "DataServiceClient": {
+              "$path": "Source/Services/DataService/Client.luau"
+            }
+          }
         },
         "Classes": {
           "$className": "Folder"
