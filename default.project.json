@@ -11,6 +11,12 @@
             "$className": "Folder",
             "DataServiceClient": {
               "$path": "Source/Services/DataService/Client.luau"
+            },
+            "Template": {
+              "$path": "Source/Services/DataService/Template.luau"
+            },
+            "DataServiceUtils": {
+              "$path": "Source/Services/DataService/Utils.luau"
             }
           }
         },
@@ -33,7 +39,13 @@
         "$path": "Source/Startup/Init.server.luau"
       },
       "Services": {
-        "$className": "Folder"
+        "$className": "Folder",
+        "DataService": {
+          "$className": "Folder",
+          "DataServiceServer": {
+            "$path": "Source/Services/DataService/Server.luau"
+          }
+        }
       },
       "Classes": {
         "$className": "Folder"
