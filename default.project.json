@@ -21,6 +21,9 @@
                 "$path": "Source/Services/DataService/Configuration/Template.luau"
               }
             },
+            "DataServiceTypes": {
+              "$path": "Source/Services/DataService/Types.luau"
+            },
             "DataServiceUtils": {
               "$path": "Source/Services/DataService/Utils.luau"
             }
