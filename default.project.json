@@ -6,16 +6,7 @@
       "Shared": {
         "$className": "Folder",
         "Services": {
-          "$className": "Folder",
-          "PrintService": {
-            "$className": "Folder",
-            "PrintServiceClient": {
-              "$path": "Source/Services/PrintService/Client.luau"
-            },
-            "PrintServiceUtils": {
-              "$path": "Source/Services/PrintService/Utils.luau"
-            }
-          }
+          "$className": "Folder"
         },
         "Classes": {
           "$className": "Folder"
@@ -36,13 +27,7 @@
         "$path": "Source/Startup/Init.server.luau"
       },
       "Services": {
-        "$className": "Folder",
-        "PrintService": {
-          "$className": "Folder",
-          "PrintServiceServer": {
-            "$path": "Source/Services/PrintService/Server.luau"
-          }
-        }
+        "$className": "Folder"
       },
       "Classes": {
         "$className": "Folder"
