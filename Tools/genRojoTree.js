@@ -33,7 +33,7 @@ function getVirtualPath(filepath) {
 
   if (filename === "init") {
     name = folderName;
-  } else if (["server", "client", "utils", "types"].includes(filename.toLowerCase())) {
+  } else if (["server", "client", "utils", "types", "settings"].includes(filename.toLowerCase())) {
     name = folderName + toPascalCase(filename);
   } else {
     name = filename;
