@@ -12,8 +12,14 @@
             "DataServiceClient": {
               "$path": "Source/Services/DataService/Client.luau"
             },
-            "Template": {
-              "$path": "Source/Services/DataService/Template.luau"
+            "Settings": {
+              "$className": "Folder",
+              "Leaderstats": {
+                "$path": "Source/Services/DataService/Settings/Leaderstats.luau"
+              },
+              "Template": {
+                "$path": "Source/Services/DataService/Settings/Template.luau"
+              }
             },
             "DataServiceUtils": {
               "$path": "Source/Services/DataService/Utils.luau"
