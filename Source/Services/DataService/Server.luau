@@ -1,3 +1,13 @@
+--[[
+    @Title: DataService Server
+    @Author: Joseph (BreakLoop)
+    @Description: Server-side interface for player data management.
+]]
+
 local DataServiceServer = {}
+
+function DataServiceServer.Init()
+	print("DataServiceServer initialized.")
+end
 
 return DataServiceServer
