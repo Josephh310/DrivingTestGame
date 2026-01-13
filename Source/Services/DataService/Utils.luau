@@ -7,7 +7,7 @@
 local PlayerDataShared = {}
 
 --Functions
-function PlayerDataShared.GetNestedValue(tbl, path: { string })
+function PlayerDataShared.get_nested_value(tbl, path: { string })
 	if not tbl or not path then
 		return nil
 	end
@@ -26,7 +26,7 @@ function PlayerDataShared.GetNestedValue(tbl, path: { string })
 	return current
 end
 
-function PlayerDataShared.SetNestedValue(tbl, path: { string }, value)
+function PlayerDataShared.set_nested_value(tbl, path: { string }, value)
 	if not tbl or not path or #path == 0 then
 		return false
 	end
