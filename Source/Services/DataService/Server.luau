@@ -4,13 +4,10 @@
     @Description: Server-side interface for player data management.
 ]]
 
-local DataServiceServer = {}
 local DataServiceServer = {
 	_profiles = {},
 }
 
-function DataServiceServer.Init()
-	print("DataServiceServer initialized.")
 -- Dependancies
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
