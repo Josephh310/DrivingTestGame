@@ -69,6 +69,12 @@ function DataServiceServer._player_added(self: DataServiceServer, player: Player
 	-- Success, store player profile
 	self._profiles[player] = new_profile
 end
+
+-- Public functions
+function DataServiceServer.get_profile(self: DataServiceServer, player: Player)
+	-- Return full profile, including ProfileStore values
+	return self._profiles[player]
+end
 end
 
 return DataServiceServer
