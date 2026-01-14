@@ -24,7 +24,13 @@
           "$className": "Folder"
         },
         "Modules": {
-          "$className": "Folder"
+          "$className": "Folder",
+          "Interface": {
+            "$className": "Folder",
+            "IrisTransition": {
+              "$path": "Source/Modules/Interface/IrisTransition"
+            }
+          }
         }
       },
       "Packages": {
