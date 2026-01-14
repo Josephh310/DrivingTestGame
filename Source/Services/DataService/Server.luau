@@ -118,6 +118,20 @@ function DataServiceServer.set_value(self: DataServiceServer, player: Player, pa
 		end
 	end
 end
+
+function DataServiceServer.apply_change(self: DataServiceServer, player: Player, path: Path, callback, ...)
+	-- Get current value of the value at path
+	local data = self:get_data(player)
+	local value = ServiceUtils.get_nested_value(data, path)
+
+	-- Give the callback the current value
+	-- Logic in the callback will modify it then return a new value
+	local new_value = callback(value, ...)
+
+	-- Save the new value
+	DataServiceServer:set_value(player, path, new_value)
+end
+
 end
 
 return DataServiceServer
