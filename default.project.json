@@ -18,6 +18,12 @@
             "DataServiceUtils": {
               "$path": "Source/Services/DataService/Utils.luau"
             }
+          },
+          "PhysicsService": {
+            "$className": "Folder",
+            "CollisionGroups": {
+              "$path": "Source/Services/PhysicsService/CollisionGroups.luau"
+            }
           }
         },
         "Classes": {
@@ -44,6 +50,12 @@
           "$className": "Folder",
           "DataServiceServer": {
             "$path": "Source/Services/DataService/Server.luau"
+          }
+        },
+        "PhysicsService": {
+          "$className": "Folder",
+          "PhysicsServiceServer": {
+            "$path": "Source/Services/PhysicsService/Server.luau"
           }
         }
       },
