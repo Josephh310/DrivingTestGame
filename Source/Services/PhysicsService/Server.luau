@@ -23,6 +23,16 @@ function PhysicsServiceServer._on_character_added(self: PhysicsServiceServer, ch
 	self:set_massless(character, true)
 end
 
+function PhysicsServiceServer._on_player_added(self: PhysicsServiceServer, player: Player)
+	-- Check for a currenly existing character and detect ones added in the future
+	if player.Character then
+		self:_on_character_added(player.Character)
+	end
+	player.CharacterAdded:Connect(function(character: Model)
+		self:_on_character_added(character)
+	end)
+end
+
 function PhysicsServiceServer.set_massless(self: PhysicsServiceServer, object: Instance, is_massless: boolean)
 	-- Make the provided object massless
 	-- Make descendants also massless (for objects like models)
