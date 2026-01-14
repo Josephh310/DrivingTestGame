@@ -6,4 +6,7 @@
 
 local ServerScriptService = game:GetService("ServerScriptService")
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
+local PhysicsServiceServer = require(ServerScriptService.Services.PhysicsService.PhysicsServiceServer)
+
 DataServiceServer:init()
+PhysicsServiceServer:init()
