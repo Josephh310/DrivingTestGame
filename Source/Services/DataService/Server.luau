@@ -23,6 +23,34 @@ local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataS
 -- Types
 export type DataServiceServer = typeof(DataServiceServer)
 export type Path = { string }
+function DataServiceServer._create_leaderstats(self: DataServiceServer, player: Player)
+	-- No need to create new leaderstats if the player already has them
+	if player:FindFirstChild("leaderstats") then
+		return
+	end
+
+	-- Get current player data, so we can fill values into the leaderboard
+	local data = self:get_data(player)
+
+	-- New leaderstats folder, required to show stats on server leaderboard
+	local leaderstats = Instance.new("Folder")
+	leaderstats.Name = "leaderstats"
+	leaderstats.Parent = player
+
+	-- Fill values
+	for leaderstat_name, display_name in ServiceSettings.leaderstats do
+		-- Get current value and type of ValueBase to store it in
+		local leaderstat_value = data[leaderstat_name]
+		local value_type = (typeof(leaderstat_value) == "string" and "StringValue") or "NumberValue"
+
+		-- Create new ValueBase
+		local new_leaderstat = Instance.new(value_type)
+		new_leaderstat.Name = display_name -- Could be capitalised differently
+		new_leaderstat.Value = leaderstat_value or new_leaderstat.Value
+		new_leaderstat.Parent = leaderstats
+	end
+end
+
 function DataServiceServer._get_profile_key(self: DataServiceServer, player: Player)
 	-- Player profile key must be a string.
 	return tostring(player.UserId)
