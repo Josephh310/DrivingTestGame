@@ -75,6 +75,11 @@ function DataServiceServer.get_profile(self: DataServiceServer, player: Player)
 	-- Return full profile, including ProfileStore values
 	return self._profiles[player]
 end
+
+function DataServiceServer.get_data(self: DataServiceServer, player: Player)
+	-- Return only the player's game-specific data
+	return self:get_profile(player).Data
+end
 end
 
 return DataServiceServer
