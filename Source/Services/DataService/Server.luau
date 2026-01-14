@@ -27,6 +27,16 @@ function DataServiceServer._get_profile_key(self: DataServiceServer, player: Pla
 	-- Player profile key must be a string.
 	return tostring(player.UserId)
 end
+
+function DataServiceServer._player_removed(self: DataServiceServer, player: Player)
+	-- Player is leaving, end their session
+	local profile = self._profiles[player]
+	if profile then
+		profile:EndSession()
+		self._profiles[player] = nil
+	end
+end
+
 function DataServiceServer._player_added(self: DataServiceServer, player: Player)
 	-- Construct new session
 	local key = self:_get_profile_key(player)
