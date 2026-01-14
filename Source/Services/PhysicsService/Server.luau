@@ -14,7 +14,6 @@ local CollisionGroups = require(script.Parent.CollisionsServer)
 -- Types
 export type PhysicsServiceServer = typeof(PhysicsServiceServer)
 
-function PhysicsServiceServer.init() end
 -- Functions
 function PhysicsServiceServer._on_character_added(self: PhysicsServiceServer, character: Model)
 	-- Register all new characters to the character collision group for appropriate collisions
