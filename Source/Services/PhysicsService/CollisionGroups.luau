@@ -5,4 +5,12 @@
 ]]
 
 local CollisionGroups = {}
+
+CollisionGroups.enums = {
+	default = "Default",
+	characters = "Characters",
+	car_body = "CarBody",
+	car_wheels = "CarWheels",
+}
+
 return CollisionGroups
