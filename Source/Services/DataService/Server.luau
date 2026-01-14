@@ -23,6 +23,10 @@ local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataS
 -- Types
 export type DataServiceServer = typeof(DataServiceServer)
 export type Path = { string }
+function DataServiceServer._get_profile_key(self: DataServiceServer, player: Player)
+	-- Player profile key must be a string.
+	return tostring(player.UserId)
+end
 end
 
 return DataServiceServer
