@@ -61,4 +61,34 @@ function PhysicsServiceServer.set_collision_group(self: PhysicsServiceServer, ob
 	end
 end
 
+function PhysicsServiceServer.init(self: PhysicsServiceServer)
+	-- Register all collision groups which haven't been manually assigned beforehand (e.g characters)
+	for index, group_name in CollisionGroups.enums do
+		local registered = PhysicsService:IsCollisionGroupRegistered(group_name)
+		if not registered then
+			PhysicsService:RegisterCollisionGroup(group_name)
+		end
+	end
+
+	for index, collision_data in CollisionGroups.data do
+		-- Get collision relationship data
+		local group_1 = collision_data[1]
+		local group_2 = collision_data[2]
+		local can_collide = collision_data[3]
+
+		-- Set collision relationship
+		PhysicsService:CollisionGroupSetCollidable(group_1, group_2, can_collide)
+	end
+
+	-- Connections
+	for index, player in Players:GetPlayers() do
+		task.defer(function()
+			self:_on_player_added(player)
+		end)
+	end
+	Players.PlayerAdded:Connect(function(player: Player)
+		self:_on_player_added(player)
+	end)
+end
+
 return PhysicsServiceServer
