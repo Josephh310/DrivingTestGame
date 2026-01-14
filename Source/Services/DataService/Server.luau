@@ -11,6 +11,15 @@ local DataServiceServer = {
 
 function DataServiceServer.Init()
 	print("DataServiceServer initialized.")
+-- Dependancies
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local Networker = require(ReplicatedStorage.Packages.Networker)
+local ProfileStore = require(ReplicatedStorage.Packages.ProfileStore)
+local ServiceSettings = require(ReplicatedStorage.Shared.Services.DataService.DataServiceSettings)
+local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataServiceUtils)
+
 end
 
 return DataServiceServer
