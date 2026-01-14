@@ -96,6 +96,9 @@ function DataServiceServer._player_added(self: DataServiceServer, player: Player
 
 	-- Success, store player profile
 	self._profiles[player] = new_profile
+
+	-- Create leaderstats
+	self:_create_leaderstats(player)
 end
 
 -- Public functions
