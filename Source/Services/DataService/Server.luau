@@ -20,6 +20,9 @@ local ProfileStore = require(ReplicatedStorage.Packages.ProfileStore)
 local ServiceSettings = require(ReplicatedStorage.Shared.Services.DataService.DataServiceSettings)
 local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataServiceUtils)
 
+-- Types
+export type DataServiceServer = typeof(DataServiceServer)
+export type Path = { string }
 end
 
 return DataServiceServer
