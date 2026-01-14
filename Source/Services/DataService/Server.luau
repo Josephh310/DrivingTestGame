@@ -171,6 +171,37 @@ function DataServiceServer.apply_change(self: DataServiceServer, player: Player,
 	DataServiceServer:set_value(player, path, new_value)
 end
 
+function DataServiceServer.init(self: DataServiceServer)
+	-- Initialize
+	self.profile_store = ProfileStore.New(ServiceSettings.flags.PROFILE_STORE_NAME, ServiceSettings.template)
+	self.networker = Networker.server.new("DataService", self, {})
+
+	-- ProfileStore mode
+	if ServiceSettings.flags.MOCK_STORE_IN_STUDIO and RunService:IsStudio() then
+		self.profile_store = self.profile_store.Mock
+	end
+
+	-- Player connections
+	for index, player in Players:GetPlayers() do
+		task.defer(function()
+			self:_player_added(player)
+		end)
+	end
+
+	Players.PlayerAdded:Connect(function(player: Player)
+		self:_player_added(player)
+		print(player.Name .. " joined the game")
+	end)
+
+	Players.PlayerRemoving:Connect(function(player: Player, exit_reason: Enum.PlayerExitReason)
+		self:_player_removed(player)
+		print(player.Name .. " left the game (" .. tostring(exit_reason) .. ")")
+	end)
+
+	-- Critical state listener
+	ProfileStore.OnCriticalToggle:Connect(function(is_critical: boolean)
+		self:_critical_status_changed(is_critical)
+	end)
 end
 
 return DataServiceServer
