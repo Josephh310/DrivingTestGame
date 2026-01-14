@@ -15,6 +15,14 @@ local CollisionGroups = require(script.Parent.CollisionsServer)
 export type PhysicsServiceServer = typeof(PhysicsServiceServer)
 
 function PhysicsServiceServer.init() end
+-- Functions
+function PhysicsServiceServer._on_character_added(self: PhysicsServiceServer, character: Model)
+	-- Register all new characters to the character collision group for appropriate collisions
+	-- Set all players to massless so their weight doesn't mess with vehicles
+	self:set_collision_group(character, CollisionGroups.enums.characters)
+	self:set_massless(character, true)
+end
+
 function PhysicsServiceServer.set_massless(self: PhysicsServiceServer, object: Instance, is_massless: boolean)
 	-- Make the provided object massless
 	-- Make descendants also massless (for objects like models)
