@@ -87,6 +87,37 @@ function DataServiceServer.get_value(self: DataServiceServer, player: Player, pa
 	local value = ServiceUtils.get_nested_value(data, path)
 	return value
 end
+
+function DataServiceServer.set_value(self: DataServiceServer, player: Player, path: Path, value: any?)
+	-- Get player's game-specific data and attempt to set a value
+	local data = self:get_data(player)
+	local set_successfully = ServiceUtils.set_nested_value(data, path, value)
+	if not set_successfully then
+		error("Unable to set " .. table.concat(path, "/") .. " to " .. value)
+		return
+	end
+
+	-- Replicate this change to the client
+	self.networker:fire(player, "replicate_value_change", path, value)
+
+	-- If the stat is a base (level 1) value, check if it's a registered leaderstat
+	if #path == 1 then
+		-- Get the stat display name
+		-- If this exists, it's a leaderstat.
+		local stat_name = path[1]
+		local display_name = ServiceSettings.leaderstats[stat_name]
+		if not display_name then
+			return
+		end
+
+		-- Check if the player has a corresponding leaderstat object
+		-- If so, set the value to the new updated value so that the server lb updates.
+		local leaderstat_value = player:WaitForChild("leaderstats"):FindFirstChild(display_name)
+		if leaderstat_value then
+			leaderstat_value.Value = value
+		end
+	end
+end
 end
 
 return DataServiceServer
