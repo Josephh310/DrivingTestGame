@@ -5,6 +5,9 @@
 ]]
 
 local DataServiceServer = {}
+local DataServiceServer = {
+	_profiles = {},
+}
 
 function DataServiceServer.Init()
 	print("DataServiceServer initialized.")
