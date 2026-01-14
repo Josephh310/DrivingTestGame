@@ -80,6 +80,13 @@ function DataServiceServer.get_data(self: DataServiceServer, player: Player)
 	-- Return only the player's game-specific data
 	return self:get_profile(player).Data
 end
+
+function DataServiceServer.get_value(self: DataServiceServer, player: Player, path: Path)
+	-- Return a specific value from the player's game-specific data
+	local data = self:get_data(player)
+	local value = ServiceUtils.get_nested_value(data, path)
+	return value
+end
 end
 
 return DataServiceServer
