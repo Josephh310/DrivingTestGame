@@ -23,6 +23,17 @@ local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataS
 -- Types
 export type DataServiceServer = typeof(DataServiceServer)
 export type Path = { string }
+
+-- Internal functions
+function DataServiceServer._critical_status_changed(self: DataServiceServer, is_critical: boolean)
+	-- This function will be called if the roblox DataStoreService becomes unstable.
+	if is_critical then
+		print("DataService has entered a critical state")
+	else
+		print("DataStore is stable")
+	end
+end
+
 function DataServiceServer._create_leaderstats(self: DataServiceServer, player: Player)
 	-- No need to create new leaderstats if the player already has them
 	if player:FindFirstChild("leaderstats") then
