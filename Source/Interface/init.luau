@@ -28,6 +28,12 @@ function InterfaceController.init(self: InterfaceController)
 	require(script.GameScreens.StarterPackPopup).init()
 	require(script.GameScreens.TrollShop).init()
 	require(script.GameScreens.VehicleInventory).init()
+
+	-- Load UI components
+	for _, component_module in script.Components:GetChildren() do
+		local component_observer = require(component_module)
+		Observers.observeTag(component_module.Name, component_observer)
+	end
 end
 
 return InterfaceController
