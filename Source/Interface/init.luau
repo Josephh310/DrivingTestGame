@@ -13,7 +13,6 @@ local Observers = require(ReplicatedStorage.Packages.Observers)
 -- Types
 export type InterfaceController = typeof(InterfaceController)
 
-function InterfaceController.init(self: InterfaceController) end
 -- Functions
 function InterfaceController.init(self: InterfaceController)
 	-- Load UI modules
