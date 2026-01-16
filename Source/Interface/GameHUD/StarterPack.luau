@@ -4,9 +4,8 @@ local StarterPack = {}
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
 -- Constants
-local GameUI = InterfaceUtils.get_screen_gui("Interface")
-local GameHUD = GameUI.HUD
-local StarterPackButton = GameHUD.StarterPackButton
+local Interface = InterfaceUtils.get_screen_gui("Interface")
+local StarterPackButton = Interface.HUD.StarterPackButton
 
 -- Functions
 function StarterPack.button_clicked()
