@@ -27,11 +27,11 @@ type Path = ServiceUtils.Path
 
 --Functions
 function DataServiceClient.set_initial_data(self: DataServiceClient, initial_data: PlayerData)
-    if not initial_data then
-        player:Kick("Your data has not been correctly loaded! Rejoin to try again")
-        return
-    end
-    data = initial_data
+	if not initial_data then
+		player:Kick("Your data has not been correctly loaded! Rejoin to try again")
+		return
+	end
+	data = initial_data
 end
 
 function DataServiceClient.init(self: DataServiceClient)
@@ -39,8 +39,8 @@ function DataServiceClient.init(self: DataServiceClient)
 end
 
 function DataServiceClient.refresh_path(self: DataServiceClient, path: Path)
-    if not path then
-		return;
+	if not path then
+		return
 	end
 	for i = 1, #path do
 		local current_path = {}
@@ -68,10 +68,10 @@ function DataServiceClient.set_value(self: DataServiceClient, path: Path, value:
 end
 
 function DataServiceClient.get_data()
-    return data
+	return data
 end
 
-function DataServiceClient.connect_to_value_changed(path: Path, callback: (...any) -> (...any)): Signal.Connection
+function DataServiceClient.connect_to_value_changed(path: Path, callback: (...any) -> ...any): Signal.Connection
 	if not path then
 		warn("No path provided")
 	end
@@ -82,7 +82,8 @@ function DataServiceClient.connect_to_value_changed(path: Path, callback: (...an
 	if not changed_signals[path_key] then
 		changed_signals[path_key] = Signal.new()
 	end
-	local current = ServiceUtils.GetNestedValue(data, path) do -- Update immediately with initial value
+	local current = ServiceUtils.GetNestedValue(data, path)
+	do -- Update immediately with initial value
 		callback(current)
 	end
 	return changed_signals[path_key]:Connect(callback)

@@ -6,4 +6,6 @@
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
+local Interface = require(ReplicatedStorage.Interface)
 DataServiceClient:init()
+Interface:init()
