@@ -19,7 +19,6 @@ local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataS
 
 -- Types
 export type DataServiceServer = typeof(DataServiceServer)
-export type Path = { string }
 
 -- Internal functions
 function DataServiceServer._critical_status_changed(self: DataServiceServer, is_critical: boolean)
@@ -104,6 +103,7 @@ function DataServiceServer._player_added(self: DataServiceServer, player: Player
 
 	-- Success, store player profile
 	self._profiles[player] = new_profile
+    self.networker:fire(player, "set_initial_data", new_profile.Data)
 
 	-- Create leaderstats
 	self:_create_leaderstats(player)
@@ -137,7 +137,7 @@ function DataServiceServer.set_value(self: DataServiceServer, player: Player, pa
 	end
 
 	-- Replicate this change to the client
-	self.networker:fire(player, "replicate_value_change", path, value)
+	self.networker:fire(player, "set_value", path, value)
 
 	-- If the stat is a base (level 1) value, check if it's a registered leaderstat
 	if #path == 1 then

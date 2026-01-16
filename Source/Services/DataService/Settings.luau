@@ -8,19 +8,25 @@
         Game-specific config flags.
 ]]
 
-return {
-	template = {
-		["stage"] = 0,
-		["equipped_vehicle"] = "Hatchback",
-		["vehicles_owned"] = {
-			[1] = "Hatchback",
+export type PlayerData = {
+    stage: number,
+    equipped_vehicle: string,
+    vehicles_owned: { string }
+}
+
+return table.freeze({
+    template = {
+		stage = 0,
+		equipped_vehicle = "Hatchback",
+		vehicles_owned = {
+			"Hatchback",
 		},
 	},
 	leaderstats = {
-		["stage"] = "Stage",
+		stage = "Stage",
 	},
 	flags = {
-		["PROFILE_STORE_NAME"] = "PlayerStore",
-		["MOCK_STORE_IN_STUDIO"] = false,
+		PROFILE_STORE_NAME = "PlayerStore",
+		MOCK_STORE_IN_STUDIO = false,
 	},
-}
+})

@@ -5,6 +5,8 @@
 /*.rbxlx.lock
 /*.rbxl.lock
 
+node_modules
+
 # Temporary files
 sourcemap.json
 

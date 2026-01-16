@@ -4,10 +4,12 @@
     @Description: Utility functions for player data management.
 ]]
 
+export type Path = { string }
+
 local PlayerDataShared = {}
 
 --Functions
-function PlayerDataShared.get_nested_value(tbl, path: { string })
+function PlayerDataShared.get_nested_value(tbl, path: Path)
 	if not tbl or not path then
 		return nil
 	end
@@ -26,7 +28,7 @@ function PlayerDataShared.get_nested_value(tbl, path: { string })
 	return current
 end
 
-function PlayerDataShared.set_nested_value(tbl, path: { string }, value)
+function PlayerDataShared.set_nested_value(tbl, path: Path, value)
 	if not tbl or not path or #path == 0 then
 		return false
 	end
