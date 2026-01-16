@@ -4,7 +4,10 @@
     @Description: Initialize and control client UI
 ]]
 
-local InterfaceController = {}
+local InterfaceController = {
+	GameScreens = {},
+	GameHUD = {},
+}
 
 -- Dependancies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -15,18 +18,23 @@ export type InterfaceController = typeof(InterfaceController)
 
 -- Functions
 function InterfaceController.init(self: InterfaceController)
-	-- Load UI modules
-	require(script.GameHUD.ActionButtons).init()
-	require(script.GameHUD.CustomTopbar).init()
-	require(script.GameHUD.GridButtons).init()
-	require(script.GameHUD.StarterPack).init()
-	require(script.GameHUD.TopbarPlus).init()
-	require(script.GameScreens.ColorCustomise).init()
-	require(script.GameScreens.GameShop).init()
-	require(script.GameScreens.PlateCustomise).init()
-	require(script.GameScreens.StarterPackPopup).init()
-	require(script.GameScreens.TrollShop).init()
-	require(script.GameScreens.VehicleInventory).init()
+	-- Load and cache game HUD
+	for _, module in script.GameHUD:GetChildren() do
+		if not module:IsA("ModuleScript") then
+			continue
+		end
+		self.GameHUD[module.Name] = require(module)
+		self.GameHUD[module.Name].init()
+	end
+
+	-- Load and cache game screens
+	for _, module in script.GameScreens:GetChildren() do
+		if not module:IsA("ModuleScript") then
+			continue
+		end
+		self.GameScreens[module.Name] = require(module)
+		self.GameScreens[module.Name].init()
+	end
 
 	-- Load UI components
 	for _, component_module in script.Components:GetChildren() do
