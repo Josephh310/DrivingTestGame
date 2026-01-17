@@ -82,7 +82,7 @@ function DataServiceClient.connect_to_value_changed(path: Path, callback: (...an
 	if not changed_signals[path_key] then
 		changed_signals[path_key] = Signal.new()
 	end
-	local current = ServiceUtils.GetNestedValue(data, path)
+	local current = ServiceUtils.get_nested_value(data, path)
 	do -- Update immediately with initial value
 		callback(current)
 	end
