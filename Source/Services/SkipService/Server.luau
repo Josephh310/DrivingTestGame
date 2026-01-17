@@ -4,7 +4,7 @@ local SkipServiceServer = {}
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local SkipServiceSettings = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceSettings)
+local SkipServiceShared = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceSettings)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
 
 -- Types
@@ -15,11 +15,11 @@ local cleanup_functions = {}
 
 -- Functions
 function SkipServiceServer.get_player_timer(self: SkipServiceServer, player: Player)
-	return player:GetAttribute(SkipServiceSettings.timer_attribute_name)
+	return player:GetAttribute(SkipServiceShared.timer_attribute_name)
 end
 
 function SkipServiceServer.set_player_timer(self: SkipServiceServer, player: Player, time: number)
-	player:SetAttribute(SkipServiceSettings.timer_attribute_name, time)
+	player:SetAttribute(SkipServiceShared.timer_attribute_name, time)
 end
 
 function SkipServiceServer._player_removing(self: SkipServiceServer, player: Player)
@@ -28,7 +28,7 @@ end
 
 function SkipServiceServer._player_added(self: SkipServiceServer, player: Player)
 	-- Init attribute
-	self:set_player_timer(player, SkipServiceSettings.skip_timer_seconds)
+	self:set_player_timer(player, SkipServiceShared.skip_timer_seconds)
 
 	-- Loop until player leaves
 	local session_active = true
@@ -36,7 +36,7 @@ function SkipServiceServer._player_added(self: SkipServiceServer, player: Player
 		local timer_value = self:get_player_timer(player)
 		task.wait(1)
 		if timer_value <= 0 then
-			self:set_player_timer(player, SkipServiceSettings.skip_timer_seconds)
+			self:set_player_timer(player, SkipServiceShared.skip_timer_seconds)
 			self:give_skip(player)
 		else
 			self:set_player_timer(player, timer_value - 1)

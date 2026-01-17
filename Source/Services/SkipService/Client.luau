@@ -2,7 +2,7 @@ local SkipServiceClient = {}
 
 -- Dependencies
 local Players = game:GetService("Players")
-local SkipServiceSettings = require(script.Parent.SkipServiceSettings)
+local SkipServiceShared = require(script.Parent.SkipServiceSettings)
 
 -- Constants
 local timer_connections = {}
@@ -22,7 +22,7 @@ end
 
 function SkipServiceClient.get_timer(self: SkipServiceClient)
 	-- :3
-	return player:GetAttribute(SkipServiceSettings.timer_attribute_name)
+	return player:GetAttribute(SkipServiceShared.timer_attribute_name)
 end
 
 function SkipServiceClient.listen_to_timer(self: SkipServiceClient, callback: (Timer) -> ())
@@ -42,7 +42,7 @@ end
 
 function SkipServiceClient.init(self: SkipServiceClient)
 	-- Subscribe to SkipTimer replication from the server
-	player:GetAttributeChangedSignal(SkipServiceSettings.timer_attribute_name):Connect(function()
+	player:GetAttributeChangedSignal(SkipServiceShared.timer_attribute_name):Connect(function()
 		self:_timer_updated()
 	end)
 end
