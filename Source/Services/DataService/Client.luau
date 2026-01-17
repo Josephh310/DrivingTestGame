@@ -32,10 +32,24 @@ function DataServiceClient.set_initial_data(self: DataServiceClient, initial_dat
 		return
 	end
 	data = initial_data
+    self:refresh_tree()
 end
 
 function DataServiceClient.init(self: DataServiceClient)
 	self.networker = Networker.client.new("DataService", self, {})
+end
+
+function DataServiceClient.refresh_tree(self: DataServiceClient, tree: { [string]: any }?, path: Path?)
+	path = path or {}
+	tree = tree or data
+	for key, value in tree do
+		local current_path: { string } = table.clone(path)
+		table.insert(current_path, key)
+		if typeof(value) == "table" and #value == 0 then
+			self:refresh_tree(value, current_path)
+		end
+		self:refresh_path(current_path)
+	end
 end
 
 function DataServiceClient.refresh_path(self: DataServiceClient, path: Path)
