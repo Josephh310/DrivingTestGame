@@ -2,6 +2,7 @@ local GridButtons = {}
 
 -- Dependencies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
 local SkipServiceClient = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceClient)
 local InterfaceUtilities = require(script.Parent.Parent.Utilities)
 
@@ -22,15 +23,20 @@ end
 function GridButtons._update_skip_timer(time_in_seconds: number)
 	local min, sec = tostring(math.floor(time_in_seconds / 60)), tostring(time_in_seconds % 60)
 	if #sec == 1 then
-		sec = sec .. "0"
+		sec = "0" .. sec
 	end
 	SkipsFrame.FreeSkipsTimer.Text = "Free skip in: " .. tostring(min) .. ":" .. tostring(sec)
+end
+
+function GridButtons._update_skip_amount(amount: number)
+	SkipsFrame.SkipsIndicator.SkipsLabel.Text = "Skip (" .. tostring(amount) .. ")"
 end
 
 function GridButtons.init()
 	GridButtonsFrame.ShopButton.MouseButton1Click:Connect(GridButtons._shop_button_clicked)
 	GridButtonsFrame.InventoryButton.MouseButton1Click:Connect(GridButtons._inventory_button_clicked)
 	SkipServiceClient:listen_to_timer(GridButtons._update_skip_timer)
+	DataServiceClient.connect_to_value_changed({ "skips" }, GridButtons._update_skip_amount)
 end
 
 return GridButtons
