@@ -6,10 +6,10 @@
 
 export type Path = { string }
 
-local PlayerDataShared = {}
+local DataServiceUtils = {}
 
 --Functions
-function PlayerDataShared.get_nested_value(tbl, path: Path)
+function DataServiceUtils.get_nested_value(tbl, path: Path)
 	if not tbl or not path then
 		return nil
 	end
@@ -28,7 +28,7 @@ function PlayerDataShared.get_nested_value(tbl, path: Path)
 	return current
 end
 
-function PlayerDataShared.set_nested_value(tbl, path: Path, value)
+function DataServiceUtils.set_nested_value(tbl, path: Path, value)
 	if not tbl or not path or #path == 0 then
 		return false
 	end
@@ -48,4 +48,4 @@ function PlayerDataShared.set_nested_value(tbl, path: Path, value)
 	return true
 end
 
-return PlayerDataShared
+return DataServiceUtils
