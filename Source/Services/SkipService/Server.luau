@@ -2,45 +2,55 @@ local SkipServiceServer = {}
 
 -- Dependencies
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local SkipServiceSettings = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceSettings)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
 
 -- Types
 export type SkipServiceServer = typeof(SkipServiceServer)
 
 -- Constants
-local CleanupFunctions = {}
+local cleanup_functions = {}
 
 -- Functions
+function SkipServiceServer.get_player_timer(self: SkipServiceServer, player: Player)
+	return player:GetAttribute(SkipServiceSettings.timer_attribute_name)
+end
+
+function SkipServiceServer.set_player_timer(self: SkipServiceServer, player: Player, time: number)
+	player:SetAttribute(SkipServiceSettings.timer_attribute_name, time)
+end
+
 function SkipServiceServer._player_removing(self: SkipServiceServer, player: Player)
-	CleanupFunctions[player]()
+	cleanup_functions[player]()
 end
 
 function SkipServiceServer._player_added(self: SkipServiceServer, player: Player)
 	-- Init attribute
-	player:SetAttribute("SkipTimer", 600)
+	self:set_player_timer(player, SkipServiceSettings.skip_timer_seconds)
 
 	-- Loop until player leaves
 	local session_active = true
 	repeat
-		local timer_value = player:GetAttribute("SkipTimer")
+		local timer_value = self:get_player_timer(player)
 		task.wait(1)
 		if timer_value <= 0 then
-			player:SetAttribute("SkipTimer", 600)
+			self:set_player_timer(player, SkipServiceSettings.skip_timer_seconds)
 			self:give_skip(player)
 		else
-			player:SetAttribute("SkipTimer", timer_value - 1)
+			self:set_player_timer(player, timer_value - 1)
 		end
 	until session_active == false
 
 	-- Store cleanup function for when the player leaves
-	CleanupFunctions[player] = function()
+	cleanup_functions[player] = function()
 		session_active = false
 	end
 end
 
 function SkipServiceServer.give_skip(self: SkipServiceServer, player: Player)
-	DataServiceServer:apply_change(player, { "Skips" }, function(current_value: number)
+	DataServiceServer:apply_change(player, { "skips" }, function(current_value: number)
 		return current_value + 1
 	end)
 end
