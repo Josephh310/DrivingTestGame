@@ -18,6 +18,12 @@
             "DataServiceUtils": {
               "$path": "Source/Services/DataService/Utils.luau"
             }
+          },
+          "SkipService": {
+            "$className": "Folder",
+            "SkipServiceClient": {
+              "$path": "Source/Services/SkipService/Client.luau"
+            }
           }
         },
         "Classes": {
@@ -53,6 +59,12 @@
           },
           "PhysicsServiceServer": {
             "$path": "Source/Services/PhysicsService/Server.luau"
+          }
+        },
+        "SkipService": {
+          "$className": "Folder",
+          "SkipServiceServer": {
+            "$path": "Source/Services/SkipService/Server.luau"
           }
         }
       },
