@@ -22,31 +22,44 @@ function toPascalCase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function pathHasServerFolder(parts) {
+  return parts.some(p => p.toLowerCase().includes("server"));
+}
+
 function getVirtualPath(filepath) {
   const relativePath = path.relative(BASE_PATH, filepath);
   const parts = relativePath.split(path.sep);
-  const filename = path.basename(filepath, ".luau");
-  const isServer = filename.toLowerCase().includes("server");
 
-  const folderName = parts.length > 1 ? toPascalCase(parts[parts.length - 2]) : "";
+  const rawFilename = path.basename(filepath, ".luau");
+  const filenameLower = rawFilename.toLowerCase();
+  const folders = parts.slice(0, -1);
+
+  const isServer =
+    filenameLower.includes("server") ||
+    pathHasServerFolder(folders);
+
+  const folderName =
+    folders.length > 0 ? toPascalCase(folders[folders.length - 1]) : "";
+
   let name;
 
-  if (filename === "init") {
+  if (rawFilename === "init") {
     name = folderName;
-  } else if (["server", "client", "utils", "types", "settings"].includes(filename.toLowerCase())) {
-    name = folderName + toPascalCase(filename);
+  } else if (["server", "client", "utils", "types", "settings"].includes(filenameLower)) {
+    name = folderName + toPascalCase(rawFilename);
   } else {
-    name = filename;
+    name = rawFilename;
   }
 
   return {
-    isInit: filename === "init",
+    isInit: rawFilename === "init",
     target: isServer ? "ServerScriptService" : "ReplicatedStorage",
-    folder: parts.slice(0, -1).map(toPascalCase),
+    folder: folders.map(toPascalCase),
     name,
-    file: filename === "init"
-    ? toPosix(path.join("Source", ...parts.slice(0, -1)))
-    : toPosix(path.join("Source", ...parts)),
+    file:
+      rawFilename === "init"
+        ? toPosix(path.join("Source", ...folders))
+        : toPosix(path.join("Source", ...parts)),
   };
 }
 
