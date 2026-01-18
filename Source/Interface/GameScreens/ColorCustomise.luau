@@ -1,3 +1,4 @@
+local CookiesService = game:GetService("CookiesService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ColorCustomise = {}
 
@@ -50,6 +51,13 @@ function ColorCustomise.init()
 	color_drag_detector.ResponseStyle = Enum.UIDragDetectorResponseStyle.Scale
 	color_drag_detector.Parent = ColorSelector
 	color_drag_detector:AddConstraintFunction(1, ColorCustomise._limit_color_selector)
+
+	-- Detect drag detector position change and fetch the color from the pixel buffer
+	-- Render to the color preview
+	color_drag_detector:AddConstraintFunction(2, function(position: UDim2)
+		local color = HSVColorWheel.get_color_at_position(color_wheel_editable, position)
+		ColorCustomiseFrame.SelectedColour.BackgroundColor3 = color
+	end)
 
 	-- Create drag detector for the brightness selector
 	local brightness_drag_detector = Instance.new("UIDragDetector")
