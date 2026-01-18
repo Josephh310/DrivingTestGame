@@ -1,8 +1,11 @@
-local CookiesService = game:GetService("CookiesService")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local ColorCustomise = {}
+local ColorCustomise = {
+	selected_color = nil :: Color3,
+	selected_brightness = nil :: number,
+	resulting_color = nil :: Color3,
+}
 
 -- Dependencies
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HSVColorWheel = require(ReplicatedStorage.Shared.Modules.Interface.HSVColorWheel)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
@@ -28,6 +31,15 @@ function ColorCustomise._close_button_clicked()
 	InterfaceUtils.toggle_screen("ColorCustomise")
 end
 
+function ColorCustomise._render_color_preview()
+	-- Fetch + normalise color state
+	local color = ColorCustomise.selected_color
+	local brightness = math.clamp(ColorCustomise.selected_brightness, 0, 1)
+	-- Calculate resulting color and render preview
+	ColorCustomise.resulting_color = InterfaceUtils.multiply_color3(color, brightness)
+	ColorCustomiseFrame.SelectedColour.BackgroundColor3 = ColorCustomise.resulting_color
+end
+
 function ColorCustomise._limit_color_selector(current_position: UDim2)
 	local circle_radius = 0.5
 	local x_position = current_position.X.Scale - 0.5
@@ -42,6 +54,7 @@ function ColorCustomise._limit_color_selector(current_position: UDim2)
 end
 
 function ColorCustomise.init()
+	-- Create and render the HSV color wheel
 	local color_wheel_editable = HSVColorWheel.create_wheel_editableimage(1024)
 	local color_wheel_content = Content.fromObject(color_wheel_editable)
 	ColorWheelFrame.ColourWheel.ImageContent = color_wheel_content
@@ -55,16 +68,29 @@ function ColorCustomise.init()
 	-- Detect drag detector position change and fetch the color from the pixel buffer
 	-- Render to the color preview
 	color_drag_detector:AddConstraintFunction(2, function(position: UDim2)
-		local color = HSVColorWheel.get_color_at_position(color_wheel_editable, position)
-		ColorCustomiseFrame.SelectedColour.BackgroundColor3 = color
+		ColorCustomise.selected_color = HSVColorWheel.get_color_at_position(color_wheel_editable, position)
+		ColorCustomise._render_color_preview()
 	end)
 
 	-- Create drag detector for the brightness selector
 	local brightness_drag_detector = Instance.new("UIDragDetector")
 	brightness_drag_detector.DragStyle = Enum.UIDragDetectorDragStyle.TranslateLine
+	brightness_drag_detector.ResponseStyle = Enum.UIDragDetectorResponseStyle.Scale
 	brightness_drag_detector.DragAxis = Vector2.new(0, 1)
 	brightness_drag_detector.BoundingUI = BrightnessFrame
 	brightness_drag_detector.Parent = BrightnessSelector
+
+	-- Detect drag detector position changes
+	-- Use relative scale position to decide brightness
+	brightness_drag_detector:AddConstraintFunction(1, function(position: UDim2)
+		ColorCustomise.selected_brightness = (1 - position.Y.Scale)
+		ColorCustomise._render_color_preview()
+	end)
+
+	-- Set constants
+	ColorCustomise.selected_color = HSVColorWheel.get_color_at_position(color_wheel_editable, ColorSelector.Position)
+	ColorCustomise.selected_brightness = (1 - BrightnessSelector.Position.Y.Scale)
+	ColorCustomise._render_color_preview()
 
 	-- Button connections
 	FrameCloseButton.MouseButton1Click:Connect(ColorCustomise._close_button_clicked)
