@@ -2,7 +2,7 @@ local SkipServiceClient = {}
 
 -- Dependencies
 local Players = game:GetService("Players")
-local SkipServiceShared = require(script.Parent.SkipServiceSettings)
+local SkipServiceShared = require(script.Parent.SkipServiceShared)
 
 -- Constants
 local timer_connections = {}

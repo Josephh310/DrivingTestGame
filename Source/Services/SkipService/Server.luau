@@ -4,7 +4,7 @@ local SkipServiceServer = {}
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
-local SkipServiceShared = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceSettings)
+local SkipServiceShared = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceShared)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
 
 -- Types
