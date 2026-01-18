@@ -1,6 +1,8 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ColorCustomise = {}
 
 -- Dependencies
+local HSVColorWheel = require(ReplicatedStorage.Shared.Modules.Interface.HSVColorWheel)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
 -- Constants
@@ -25,21 +27,24 @@ function ColorCustomise._close_button_clicked()
 	InterfaceUtils.toggle_screen("ColorCustomise")
 end
 
-local last_position = nil
 function ColorCustomise._limit_color_selector(current_position: UDim2)
 	local circle_radius = 0.5
 	local x_position = current_position.X.Scale - 0.5
 	local y_position = current_position.Y.Scale - 0.5
 	local offset = math.sqrt(x_position ^ 2 + y_position ^ 2)
 	if offset <= circle_radius then
-		last_position = current_position
+		ColorCustomise.last_position = current_position
 		return current_position
 	else
-		return last_position
+		return ColorCustomise.last_position
 	end
 end
 
 function ColorCustomise.init()
+	local color_wheel_editable = HSVColorWheel.create_wheel_editableimage(1024)
+	local color_wheel_content = Content.fromObject(color_wheel_editable)
+	ColorWheelFrame.ColourWheel.ImageContent = color_wheel_content
+
 	-- Create drag detector for the color selector
 	local color_drag_detector = Instance.new("UIDragDetector")
 	color_drag_detector.ResponseStyle = Enum.UIDragDetectorResponseStyle.Scale
