@@ -85,10 +85,15 @@ function HSVColorWheel.create_wheel_editableimage(size: number)
 end
 
 function HSVColorWheel.get_color_at_position(editable_image: EditableImage, position: UDim2)
+	-- Get the absolute pixel position from the relative UDim2 scale value
 	local x_pixel_position = math.floor((editable_image.Size.X * position.X.Scale) + 0.5)
 	local y_pixel_position = math.floor((editable_image.Size.Y * position.Y.Scale) + 0.5)
+
+	-- Retrieve the pixel buffer from the editable image
 	local pixel_position = Vector2.new(x_pixel_position, y_pixel_position)
 	local pixel_buffer = editable_image:ReadPixelsBuffer(pixel_position, Vector2.new(1, 1))
+
+	-- Extract and return the color data formatted as Color3
 	return Color3.fromRGB(
 		buffer.readu8(pixel_buffer, 0),
 		buffer.readu8(pixel_buffer, 1),
