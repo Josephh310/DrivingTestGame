@@ -14,7 +14,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Networker = require(ReplicatedStorage.Packages.Networker)
 local ProfileStore = require(ReplicatedStorage.Packages.ProfileStore)
-local ServiceSettings = require(ReplicatedStorage.Shared.Services.DataService.DataServiceSettings)
+local ServiceShared = require(ReplicatedStorage.Shared.Services.DataService.DataServiceShared)
 local ServiceUtils = require(ReplicatedStorage.Shared.Services.DataService.DataServiceUtils)
 
 -- Types
@@ -45,7 +45,7 @@ function DataServiceServer._create_leaderstats(self: DataServiceServer, player: 
 	leaderstats.Parent = player
 
 	-- Fill values
-	for leaderstat_name, display_name in ServiceSettings.leaderstats do
+	for leaderstat_name, display_name in ServiceShared.leaderstats do
 		-- Get current value and type of ValueBase to store it in
 		local leaderstat_value = data[leaderstat_name]
 		local value_type = (typeof(leaderstat_value) == "string" and "StringValue") or "NumberValue"
@@ -103,7 +103,7 @@ function DataServiceServer._player_added(self: DataServiceServer, player: Player
 
 	-- Success, store player profile
 	self._profiles[player] = new_profile
-    self.networker:fire(player, "set_initial_data", new_profile.Data)
+	self.networker:fire(player, "set_initial_data", new_profile.Data)
 
 	-- Create leaderstats
 	self:_create_leaderstats(player)
@@ -144,7 +144,7 @@ function DataServiceServer.set_value(self: DataServiceServer, player: Player, pa
 		-- Get the stat display name
 		-- If this exists, it's a leaderstat.
 		local stat_name = path[1]
-		local display_name = ServiceSettings.leaderstats[stat_name]
+		local display_name = ServiceShared.leaderstats[stat_name]
 		if not display_name then
 			return
 		end
@@ -173,11 +173,11 @@ end
 
 function DataServiceServer.init(self: DataServiceServer)
 	-- Initialize
-	self.profile_store = ProfileStore.New(ServiceSettings.flags.PROFILE_STORE_NAME, ServiceSettings.template)
+	self.profile_store = ProfileStore.New(ServiceShared.flags.PROFILE_STORE_NAME, ServiceShared.template)
 	self.networker = Networker.server.new("DataService", self, {})
 
 	-- ProfileStore mode
-	if ServiceSettings.flags.MOCK_STORE_IN_STUDIO and RunService:IsStudio() then
+	if ServiceShared.flags.MOCK_STORE_IN_STUDIO and RunService:IsStudio() then
 		self.profile_store = self.profile_store.Mock
 	end
 

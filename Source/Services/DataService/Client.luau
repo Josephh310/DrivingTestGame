@@ -13,16 +13,16 @@ local Networker = require(ReplicatedStorage.Packages.Networker)
 local Signal = require(ReplicatedStorage.Packages.Signal)
 
 local ServiceUtils = require(script.Parent.DataServiceUtils)
-local ServiceSettings = require(script.Parent.DataServiceSettings)
+local ServiceShared = require(script.Parent.DataServiceShared)
 
 local player = Players.LocalPlayer
 local changed_signals = {}
-local data: PlayerData = ServiceSettings.template
+local data: PlayerData = ServiceShared.template
 
 --Types
 export type DataServiceClient = typeof(DataServiceClient)
 
-type PlayerData = ServiceSettings.PlayerData
+type PlayerData = ServiceShared.PlayerData
 type Path = ServiceUtils.Path
 
 --Functions
@@ -32,7 +32,7 @@ function DataServiceClient.set_initial_data(self: DataServiceClient, initial_dat
 		return
 	end
 	data = initial_data
-    self:refresh_tree()
+	self:refresh_tree()
 end
 
 function DataServiceClient.init(self: DataServiceClient)

@@ -12,7 +12,7 @@
             "DataServiceClient": {
               "$path": "Source/Services/DataService/Client.luau"
             },
-            "Shared": {
+            "DataServiceShared": {
               "$path": "Source/Services/DataService/Shared.luau"
             },
             "DataServiceUtils": {
@@ -24,7 +24,7 @@
             "SkipServiceClient": {
               "$path": "Source/Services/SkipService/Client.luau"
             },
-            "Shared": {
+            "SkipServiceShared": {
               "$path": "Source/Services/SkipService/Shared.luau"
             }
           }
@@ -33,7 +33,13 @@
           "$className": "Folder"
         },
         "Modules": {
-          "$className": "Folder"
+          "$className": "Folder",
+          "Interface": {
+            "$className": "Folder",
+            "HSVColorWheel": {
+              "$path": "Source/Modules/Interface/HSVColorWheel.luau"
+            }
+          }
         }
       },
       "Packages": {
