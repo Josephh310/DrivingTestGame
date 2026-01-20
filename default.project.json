@@ -36,6 +36,12 @@
             "SkipServiceShared": {
               "$path": "Source/Services/SkipService/Shared.luau"
             }
+          },
+          "VehicleService": {
+            "$className": "Folder",
+            "VehicleServiceClient": {
+              "$path": "Source/Services/VehicleService/Client.luau"
+            }
           }
         },
         "Classes": {
@@ -43,11 +49,26 @@
         },
         "Modules": {
           "$className": "Folder",
+          "AnchorModel": {
+            "$path": "Source/Modules/AnchorModel.luau"
+          },
           "Interface": {
             "$className": "Folder",
             "HSVColorWheel": {
               "$path": "Source/Modules/Interface/HSVColorWheel.luau"
             }
+          },
+          "ModelReplicationTools": {
+            "$path": "Source/Modules/ModelReplicationTools.luau"
+          },
+          "VehicleClient": {
+            "$className": "Folder",
+            "Components": {
+              "$path": "Source/Modules/VehicleClient/Components"
+            }
+          },
+          "VehicleKinds": {
+            "$path": "Source/Modules/VehicleKinds.luau"
           }
         }
       },
@@ -90,13 +111,28 @@
           "SkipServiceServer": {
             "$path": "Source/Services/SkipService/Server.luau"
           }
+        },
+        "VehicleService": {
+          "$className": "Folder",
+          "VehicleServiceServer": {
+            "$path": "Source/Services/VehicleService/Server.luau"
+          }
         }
       },
       "Classes": {
         "$className": "Folder"
       },
       "Modules": {
-        "$className": "Folder"
+        "$className": "Folder",
+        "VehicleServer": {
+          "$className": "Folder",
+          "Components": {
+            "$path": "Source/Modules/VehicleServer/Components"
+          },
+          "Kinds": {
+            "$path": "Source/Modules/VehicleServer/Kinds.luau"
+          }
+        }
       }
     },
     "StarterPlayer": {
