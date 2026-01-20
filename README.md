@@ -1,6 +1,3 @@
-# Rojo Tree Generation
+# Driving Test
 
-A modified version of [leifstout/genRojoTree](https://github.com/leifstout/genRojoTree/tree/main).
-
-- Modified to work on MacOS
-- Modified to fit my own filename preferences
+A roblox game about passing your driving test. Get to the end of the obstacle course to recieve your license!
