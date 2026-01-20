@@ -3,27 +3,32 @@ local MarketplaceShared = {}
 MarketplaceShared.products = {
 	-- Gamepasses
 	exclusive_vehicles = {
-		asset_id = 9273584416,
+		asset_id = 1674981873,
+		giftable_id = 3517122956,
 		product_type = Enum.InfoType.GamePass,
 	},
 	plate_customisation = {
 		asset_id = 1675388395,
+		giftable_id = 3517287703,
 		product_type = Enum.InfoType.GamePass,
 	},
 	speed_boost = {
 		asset_id = 1674854149,
+		giftable_id = 3517122860,
 		product_type = Enum.InfoType.GamePass,
 	},
 	color_customisation = {
 		asset_id = 1674736165,
+		giftable_id = 3517287554,
 		product_type = Enum.InfoType.GamePass,
 	},
 	vip_pass = {
-		asset_id = 9273584416,
+		asset_id = 1675376816,
+		giftable_id = 3517122426,
 		product_type = Enum.InfoType.GamePass,
 	},
 
-	-- Developer products
+	-- Developer products (automatically giftable)
 	skip_1 = {
 		asset_id = 3517120513,
 		product_type = Enum.InfoType.Product,
@@ -44,36 +49,12 @@ MarketplaceShared.products = {
 		asset_id = 3517121647,
 		product_type = Enum.InfoType.Product,
 	},
-	troll_1_global = {
+	troll_everyone = {
 		asset_id = 3517122310,
 		product_type = Enum.InfoType.Product,
 	},
-	troll_2_global = {
-		asset_id = 3517122426,
-		product_type = Enum.InfoType.Product,
-	},
-	troll_3_global = {
-		asset_id = 3517122860,
-		product_type = Enum.InfoType.Product,
-	},
-	troll_4_global = {
-		asset_id = 3517122956,
-		product_type = Enum.InfoType.Product,
-	},
-	troll_1_individual = {
+	troll_individual = {
 		asset_id = 3517287382,
-		product_type = Enum.InfoType.Product,
-	},
-	troll_2_individual = {
-		asset_id = 3517287554,
-		product_type = Enum.InfoType.Product,
-	},
-	troll_3_individual = {
-		asset_id = 3517287703,
-		product_type = Enum.InfoType.Product,
-	},
-	troll_4_individual = {
-		asset_id = 3517287828,
 		product_type = Enum.InfoType.Product,
 	},
 }
