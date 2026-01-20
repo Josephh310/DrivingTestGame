@@ -1,7 +1,10 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Networker = require(ReplicatedStorage.Packages.Networker)
 local MarketplaceClient = {}
 
+-- Dependencies
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Networker = require(ReplicatedStorage.Packages.Networker)
+
+-- Types
 export type MarketplaceClient = typeof(MarketplaceClient)
 
 function MarketplaceClient.init(self: MarketplaceClient)
