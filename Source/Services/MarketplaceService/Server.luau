@@ -1,4 +1,11 @@
+--[[
+    @Title: Marketplace server manager
+    @Author: Joseph (BreakLoop)
+    @Description: Fetch product info via MarketplaceService and handle purchase rewards.
+]]
+
 local MarketplaceServer = {
+	products_loaded = false,
 	product_cache = {},
 }
 
@@ -13,6 +20,12 @@ export type MarketplaceServer = typeof(MarketplaceServer)
 
 -- Functions
 function MarketplaceServer.get_cached_products(self: MarketplaceServer)
+	-- Wait until all product info is fetched
+	repeat
+		task.wait()
+	until self.products_loaded == true
+
+	-- Return loaded product information`
 	return self.product_cache
 end
 
@@ -39,11 +52,14 @@ function MarketplaceServer.init(self: MarketplaceServer)
 		self.get_cached_products,
 		self.get_product_info,
 	})
-	for index, product_data in MarketplaceServiceShared.products do
-		local asset_id = product_data.product_id
-		local product_type = product_data.product_type
-		self.product_cache[index] = self:get_product_info(asset_id, product_type)
-	end
+	task.defer(function()
+		for index, product_data in MarketplaceServiceShared.products do
+			local asset_id = product_data.asset_id
+			local product_type = product_data.product_type
+			self.product_cache[index] = self:get_product_info(asset_id, product_type)
+		end
+		self.products_loaded = true
+	end)
 end
 
 return MarketplaceServer
