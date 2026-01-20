@@ -7,10 +7,12 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
 local Interface = require(ReplicatedStorage.Interface)
+local MarketplaceServiceClient = require(ReplicatedStorage.Shared.Services.MarketplaceService.MarketplaceServiceClient)
 local VehicleServiceClient = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceClient)
 local SkipServiceClient = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceClient)
 
 DataServiceClient:init()
+MarketplaceServiceClient:init()
 VehicleServiceClient:init()
 SkipServiceClient:init()
 Interface:init()
