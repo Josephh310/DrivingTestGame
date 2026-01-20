@@ -76,6 +76,9 @@ end
 -- Public functions
 function VehicleServiceServer.init(self: VehicleServiceServer)
     self.networker = Networker.server.new("VehicleService", self, { self.request_equip_vehicle, self.reset_vehicle })
+    game:GetService("Players").PlayerRemoving:Connect(function(player)
+        cleanup[player] = nil
+    end)
 end
 
 function VehicleServiceServer.spawn_vehicle(self: VehicleServiceServer, player: Player, _vehicle: string?) -- VehicleOverride is optional
