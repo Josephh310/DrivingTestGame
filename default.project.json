@@ -19,6 +19,15 @@
               "$path": "Source/Services/DataService/Utils.luau"
             }
           },
+          "MarketplaceService": {
+            "$className": "Folder",
+            "MarketplaceServiceClient": {
+              "$path": "Source/Services/MarketplaceService/Client.luau"
+            },
+            "MarketplaceServiceShared": {
+              "$path": "Source/Services/MarketplaceService/Shared.luau"
+            }
+          },
           "SkipService": {
             "$className": "Folder",
             "SkipServiceClient": {
@@ -59,6 +68,12 @@
           "$className": "Folder",
           "DataServiceServer": {
             "$path": "Source/Services/DataService/Server.luau"
+          }
+        },
+        "MarketplaceService": {
+          "$className": "Folder",
+          "MarketplaceServiceServer": {
+            "$path": "Source/Services/MarketplaceService/Server.luau"
           }
         },
         "PhysicsService": {
