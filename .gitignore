@@ -16,3 +16,7 @@ wally.lock
 
 # MacOS grrr
 .DS_STORE
+
+# Roblox place extensions
+*.rbxl
+*.rbxlx

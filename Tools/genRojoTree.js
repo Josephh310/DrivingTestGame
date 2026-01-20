@@ -77,9 +77,7 @@ const tree = {
       },
       Packages: { $path: "Packages", },
       Interface: { $path: "Source/Interface", },
-      /*
-      Assets: { $path: "Assets/ReplicatedStorage" }
-      */
+      Assets: { $path: "Assets/Replicated" }
     },
 
     ServerScriptService: {
@@ -95,17 +93,21 @@ const tree = {
       },
     },
 
-    /*
     Workspace: {
       $path: "Assets/Workspace",
     },
-    */
 
-    /*
     StarterGui: {
       $path: "Assets/StarterGui"
+    },
+
+    Lighting: {
+      $path: "Assets/Lighting"
+    },
+
+    MaterialService: {
+      $path: "Assets/Materials"
     }
-    */
   }
 };
 
