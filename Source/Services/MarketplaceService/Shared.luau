@@ -27,6 +27,10 @@ MarketplaceShared.products = {
 		product_id = 3517122426,
 		purchase_type = MarketplaceShared.product_types.single_purchase,
 	},
+	starter_pack = {
+		product_id = 3517287828,
+		purchase_type = MarketplaceShared.product_types.single_purchase,
+	},
 
 	-- Multi-purchase
 	skip_1 = {
