@@ -2,9 +2,51 @@
   "name": "genrojotree",
   "tree": {
     "$className": "DataModel",
+    "Lighting": {
+      "$path": "Assets/Lighting"
+    },
+    "MaterialService": {
+      "$path": "Assets/Materials"
+    },
     "ReplicatedStorage": {
+      "Assets": {
+        "$path": "Assets/Replicated"
+      },
+      "Interface": {
+        "$path": "Source/Interface"
+      },
+      "Packages": {
+        "$path": "Packages"
+      },
       "Shared": {
         "$className": "Folder",
+        "Classes": {
+          "$className": "Folder"
+        },
+        "Modules": {
+          "$className": "Folder",
+          "AnchorModel": {
+            "$path": "Source/Modules/AnchorModel.luau"
+          },
+          "Interface": {
+            "$className": "Folder",
+            "HSVColorWheel": {
+              "$path": "Source/Modules/Interface/HSVColorWheel.luau"
+            }
+          },
+          "ModelReplicationTools": {
+            "$path": "Source/Modules/ModelReplicationTools.luau"
+          },
+          "VehicleClient": {
+            "$className": "Folder",
+            "Components": {
+              "$path": "Source/Modules/VehicleClient/Components"
+            }
+          },
+          "VehicleKinds": {
+            "$path": "Source/Modules/VehicleKinds.luau"
+          }
+        },
         "Services": {
           "$className": "Folder",
           "DataService": {
@@ -43,46 +85,25 @@
               "$path": "Source/Services/VehicleService/Client.luau"
             }
           }
-        },
-        "Classes": {
-          "$className": "Folder"
-        },
-        "Modules": {
-          "$className": "Folder",
-          "AnchorModel": {
-            "$path": "Source/Modules/AnchorModel.luau"
-          },
-          "Interface": {
-            "$className": "Folder",
-            "HSVColorWheel": {
-              "$path": "Source/Modules/Interface/HSVColorWheel.luau"
-            }
-          },
-          "ModelReplicationTools": {
-            "$path": "Source/Modules/ModelReplicationTools.luau"
-          },
-          "VehicleClient": {
-            "$className": "Folder",
-            "Components": {
-              "$path": "Source/Modules/VehicleClient/Components"
-            }
-          },
-          "VehicleKinds": {
-            "$path": "Source/Modules/VehicleKinds.luau"
-          }
         }
-      },
-      "Packages": {
-        "$path": "Packages"
-      },
-      "Interface": {
-        "$path": "Source/Interface"
-      },
-      "Assets": {
-        "$path": "Assets/Replicated"
       }
     },
     "ServerScriptService": {
+      "Classes": {
+        "$className": "Folder"
+      },
+      "Modules": {
+        "$className": "Folder",
+        "VehicleServer": {
+          "$className": "Folder",
+          "Components": {
+            "$path": "Source/Modules/VehicleServer/Components"
+          },
+          "Kinds": {
+            "$path": "Source/Modules/VehicleServer/Kinds.luau"
+          }
+        }
+      },
       "Server": {
         "$path": "Source/Startup/Init.server.luau"
       },
@@ -121,22 +142,10 @@
             "$path": "Source/Services/VehicleService/Server.luau"
           }
         }
-      },
-      "Classes": {
-        "$className": "Folder"
-      },
-      "Modules": {
-        "$className": "Folder",
-        "VehicleServer": {
-          "$className": "Folder",
-          "Components": {
-            "$path": "Source/Modules/VehicleServer/Components"
-          },
-          "Kinds": {
-            "$path": "Source/Modules/VehicleServer/Kinds.luau"
-          }
-        }
       }
+    },
+    "StarterGui": {
+      "$path": "Assets/StarterGui"
     },
     "StarterPlayer": {
       "StarterPlayerScripts": {
@@ -146,16 +155,22 @@
       }
     },
     "Workspace": {
+      "$properties": {
+        "NextGenerationReplication": {
+          "Enum": 0
+        },
+        "PlayerScriptsUseInputActionSystem": {
+          "Enum": 0
+        },
+        "UseFixedSimulation": {
+          "Enum": 0
+        },
+        "UseNewLuauTypeSolver": "Disabled"
+      },
+      "$attributes": {
+        "Rojo_Target_CurrentCamera": "13d6d367a34b418209819eee00006578"
+      },
       "$path": "Assets/Workspace"
-    },
-    "StarterGui": {
-      "$path": "Assets/StarterGui"
-    },
-    "Lighting": {
-      "$path": "Assets/Lighting"
-    },
-    "MaterialService": {
-      "$path": "Assets/Materials"
     }
   }
 }

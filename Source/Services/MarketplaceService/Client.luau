@@ -26,7 +26,7 @@ function MarketplaceClient.get_product_cache(self: MarketplaceClient)
 	return self.product_cache
 end
 
-function MarketplaceClient.get_product_info(self: MarketplaceServiceClient, product_code: string)
+function MarketplaceClient.get_product_info(self: MarketplaceClient, product_code: string)
 	-- This function will yield if a server was just started up
 	local product_cache = self:get_product_cache()
 	local product_info = product_cache[product_code]
