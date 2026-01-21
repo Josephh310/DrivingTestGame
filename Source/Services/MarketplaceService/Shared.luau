@@ -59,4 +59,25 @@ MarketplaceShared.products = {
 	},
 }
 
+MarketplaceShared.error_codes = {
+	ALREADY_OWNS_GAMEPASS = "You already own this gamepass!",
+	INSUFFICIENT_FUNDS = "Insufficient Robux",
+	PURCHASE_CANCELLED = "Purchase was cancelled",
+	PRODUCT_NOT_FOUND = "Product not found",
+	INVALID_RECIPIENT = "Invalid gift recipient",
+	CANNOT_GIFT_TO_SELF = "Cannot gift to yourself",
+	RECIPIENT_OWNS_GAMEPASS = "Recipient already owns this gamepass",
+	MARKETPLACE_SERVICE_DOWN = "Marketplace service is currently unavailable",
+	UNKNOWN_ERROR = "An unknown error occurred",
+}
+
+function MarketplaceShared.get_product(product_code: string)
+	return MarketplaceShared.products[product_code]
+end
+
+function MarketplaceShared.is_gamepass(product_code: string): boolean
+	local product = MarketplaceShared.get_product(product_code)
+	return product and product.product_type == Enum.InfoType.GamePass
+end
+
 return MarketplaceShared
