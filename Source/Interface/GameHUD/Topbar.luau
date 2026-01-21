@@ -37,10 +37,16 @@ function Topbar._skip_all_clicked()
 end
 
 function Topbar.hide()
+	if ShowTween.PlaybackState == Enum.PlaybackState.Playing then
+		ShowTween.Completed:Wait()
+	end
 	HideTween:Play()
 end
 
 function Topbar.show()
+	if HideTween.PlaybackState == Enum.PlaybackState.Playing then
+		HideTween.Completed:Wait()
+	end
 	ShowTween:Play()
 end
 
