@@ -1,74 +1,74 @@
 local MarketplaceShared = {}
 
+MarketplaceShared.product_types = {
+	single_purchase = 1,
+	multi_purchase = 2,
+}
+
 MarketplaceShared.products = {
-	-- Gamepasses
+	-- Single-purchase
 	exclusive_vehicles = {
-		asset_id = 1674981873,
-		giftable_id = 3517122956,
-		product_type = Enum.InfoType.GamePass,
+		product_id = 3517122956,
+		purchase_type = MarketplaceShared.product_types.single_purchase,
 	},
 	plate_customisation = {
-		asset_id = 1675388395,
-		giftable_id = 3517287703,
-		product_type = Enum.InfoType.GamePass,
+		product_id = 3517287703,
+		purchase_type = MarketplaceShared.product_types.single_purchase,
 	},
 	speed_boost = {
-		asset_id = 1674854149,
-		giftable_id = 3517122860,
-		product_type = Enum.InfoType.GamePass,
+		product_id = 3517122860,
+		purchase_type = MarketplaceShared.product_types.single_purchase,
 	},
 	color_customisation = {
-		asset_id = 1674736165,
-		giftable_id = 3517287554,
-		product_type = Enum.InfoType.GamePass,
+		product_id = 3517287554,
+		purchase_type = MarketplaceShared.product_types.single_purchase,
 	},
 	vip_pass = {
-		asset_id = 1675376816,
-		giftable_id = 3517122426,
-		product_type = Enum.InfoType.GamePass,
+		product_id = 3517122426,
+		purchase_type = MarketplaceShared.product_types.single_purchase,
 	},
 
-	-- Developer products (automatically giftable)
+	-- Multi-purchase
 	skip_1 = {
-		asset_id = 3517120513,
-		product_type = Enum.InfoType.Product,
+		product_id = 3517120513,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
-	skip_2 = {
-		asset_id = 3517120754,
-		product_type = Enum.InfoType.Product,
+	skip_5 = {
+		product_id = 3517120904,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
-	skip_4 = {
-		asset_id = 3517120904,
-		product_type = Enum.InfoType.Product,
+	skip_10 = {
+		product_id = 3517120754,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
-	skip_8 = {
-		asset_id = 3517121010,
-		product_type = Enum.InfoType.Product,
+	skip_30 = {
+		product_id = 3517121010,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
 	skip_to_end = {
-		asset_id = 3517121647,
-		product_type = Enum.InfoType.Product,
+		product_id = 3517121647,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
 	troll_everyone = {
-		asset_id = 3517122310,
-		product_type = Enum.InfoType.Product,
+		product_id = 3517122310,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
 	troll_individual = {
-		asset_id = 3517287382,
-		product_type = Enum.InfoType.Product,
+		product_id = 3517287382,
+		purchase_type = MarketplaceShared.product_types.multi_purchase,
 	},
 }
 
 MarketplaceShared.error_codes = {
-	ALREADY_OWNS_GAMEPASS = "You already own this gamepass!",
-	INSUFFICIENT_FUNDS = "Insufficient Robux",
-	PURCHASE_CANCELLED = "Purchase was cancelled",
-	PRODUCT_NOT_FOUND = "Product not found",
-	INVALID_RECIPIENT = "Invalid gift recipient",
-	CANNOT_GIFT_TO_SELF = "Cannot gift to yourself",
-	RECIPIENT_OWNS_GAMEPASS = "Recipient already owns this gamepass",
-	MARKETPLACE_SERVICE_DOWN = "Marketplace service is currently unavailable",
-	UNKNOWN_ERROR = "An unknown error occurred",
+	already_owned = "You already own this product!",
+	insufficient_funds = "Insufficient Robux",
+	purchase_cancelled = "Purchase was cancelled",
+	product_not_found = "Product not found",
+	invalid_recipient = "Invalid gift recipient",
+	cannot_gift_to_self = "Cannot gift to yourself",
+	recipient_owns_product = "Recipient already owns this gamepass",
+	marketplace_service_down = "Marketplace service is currently unavailable",
+	unknown_error = "An unknown error occurred",
 }
 
 return MarketplaceShared
