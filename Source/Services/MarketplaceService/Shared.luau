@@ -71,13 +71,4 @@ MarketplaceShared.error_codes = {
 	UNKNOWN_ERROR = "An unknown error occurred",
 }
 
-function MarketplaceShared.get_product(product_code: string)
-	return MarketplaceShared.products[product_code]
-end
-
-function MarketplaceShared.is_gamepass(product_code: string): boolean
-	local product = MarketplaceShared.get_product(product_code)
-	return product and product.product_type == Enum.InfoType.GamePass
-end
-
 return MarketplaceShared

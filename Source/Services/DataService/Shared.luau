@@ -14,6 +14,9 @@ export type PlayerData = {
 	stage: number,
 	equipped_vehicle: string,
 	vehicles_owned: { string },
+	owned_gamepasses: { string },
+	purchase_history: { any },
+	pending_gifts: { any },
 }
 
 DataServiceShared.template = {
@@ -21,6 +24,9 @@ DataServiceShared.template = {
 	skips = 0,
 	vehicles = {},
 	equipped_vehicle = "",
+	owned_gamepasses = {},
+	purchase_history = {},
+	pending_gifts = {},
 }
 
 DataServiceShared.leaderstats = {
