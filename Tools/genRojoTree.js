@@ -77,7 +77,6 @@ const tree = {
       },
       Packages: { $path: "Packages", },
       Interface: { $path: "Source/Interface", },
-      Assets: { $path: "Assets/Replicated" }
     },
 
     ServerScriptService: {
@@ -92,22 +91,6 @@ const tree = {
         Client: { $path: "Source/Startup/Init.client.luau", }
       },
     },
-
-    Workspace: {
-      $path: "Assets/Workspace",
-    },
-
-    StarterGui: {
-      $path: "Assets/StarterGui"
-    },
-
-    Lighting: {
-      $path: "Assets/Lighting"
-    },
-
-    MaterialService: {
-      $path: "Assets/Materials"
-    }
   }
 };
 
