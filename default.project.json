@@ -111,6 +111,9 @@
               "$className": "Folder",
               "Kick": {
                 "$path": "Source/Services/Conch/Commands/Server/Kick.luau"
+              },
+              "SpawnVehicle": {
+                "$path": "Source/Services/Conch/Commands/Server/SpawnVehicle.luau"
               }
             }
           },

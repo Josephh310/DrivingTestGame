@@ -15,15 +15,18 @@ export type CommandData = {
 ConchShared.permissions = {
 	["kick_players"] = 1,
 	["edit_user_data"] = 2,
+	["spawn_vehicles"] = 3,
 }
 
 ConchShared.roles = {
 	["admin"] = {
 		ConchShared.permissions.kick_players,
+		ConchShared.permissions.spawn_vehicles,
 	},
 	["owner"] = {
 		ConchShared.permissions.kick_players,
 		ConchShared.permissions.edit_user_data,
+		ConchShared.permissions.spawn_vehicles,
 	},
 }
 

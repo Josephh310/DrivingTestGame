@@ -9,7 +9,7 @@ return {
 	},
 	arguments = function()
 		local player = Conch.args.player("player", "The player that should be kicked from the server")
-		local reason = Conch.args.string("reason", "The reason why the player has been kicked from the user.")
+		local reason = Conch.args.string("reason", "The reason why the player has been kicked from the user")
 		return player, reason
 	end,
 	callback = function(player, reason)
