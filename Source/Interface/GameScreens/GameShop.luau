@@ -24,6 +24,16 @@ function GameShop._close_button_clicked()
 	InterfaceUtils.toggle_screen("GameShop")
 end
 
+local function hidePart(part: BasePart)
+	if typeof(part) ~= "BasePart" then
+		return
+	end
+	part.LocalTransparencyModifier = 1
+	part:GetPropertyChangedSignal("LocalTransparencyModifier"):Connect(function()
+		part["LocalTransparencyModifier"] = 1
+	end)
+end
+
 function GameShop.init()
 	-- TODO
 
