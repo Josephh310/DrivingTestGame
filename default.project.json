@@ -7,6 +7,24 @@
         "$className": "Folder",
         "Services": {
           "$className": "Folder",
+          "Conch": {
+            "$className": "Folder",
+            "ConchClient": {
+              "$path": "Source/Services/Conch/Client.luau"
+            },
+            "Commands": {
+              "$className": "Folder",
+              "Client": {
+                "$className": "Folder",
+                "TestClient": {
+                  "$path": "Source/Services/Conch/Commands/Client/TestClient.luau"
+                }
+              }
+            },
+            "ConchShared": {
+              "$path": "Source/Services/Conch/Shared.luau"
+            }
+          },
           "DataService": {
             "$className": "Folder",
             "DataServiceClient": {
@@ -77,9 +95,6 @@
       },
       "Interface": {
         "$path": "Source/Interface"
-      },
-      "Assets": {
-        "$path": "Assets/Replicated"
       }
     },
     "ServerScriptService": {
@@ -88,6 +103,21 @@
       },
       "Services": {
         "$className": "Folder",
+        "Conch": {
+          "$className": "Folder",
+          "Commands": {
+            "$className": "Folder",
+            "Server": {
+              "$className": "Folder",
+              "Kick": {
+                "$path": "Source/Services/Conch/Commands/Server/Kick.luau"
+              }
+            }
+          },
+          "ConchServer": {
+            "$path": "Source/Services/Conch/Server.luau"
+          }
+        },
         "DataService": {
           "$className": "Folder",
           "DataServiceServer": {
@@ -144,18 +174,6 @@
           "$path": "Source/Startup/Init.client.luau"
         }
       }
-    },
-    "Workspace": {
-      "$path": "Assets/Workspace"
-    },
-    "StarterGui": {
-      "$path": "Assets/StarterGui"
-    },
-    "Lighting": {
-      "$path": "Assets/Lighting"
-    },
-    "MaterialService": {
-      "$path": "Assets/Materials"
     }
   }
 }

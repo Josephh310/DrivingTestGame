@@ -1,0 +1,73 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Conch = require(ReplicatedStorage.Packages.Conch)
+local ConchShared = {}
+
+-- Types
+export type ConchShared = typeof(ConchShared)
+export type CommandArgs = { any }
+export type CommandData = {
+	permissions: { string },
+	arguments: (nil) -> CommandArgs,
+	callback: (CommandArgs) -> nil,
+}
+
+-- Values
+ConchShared.permissions = {
+	["kick_players"] = 1,
+	["edit_user_data"] = 2,
+}
+
+ConchShared.roles = {
+	["admin"] = {
+		ConchShared.permissions.kick_players,
+	},
+	["owner"] = {
+		ConchShared.permissions.kick_players,
+		ConchShared.permissions.edit_user_data,
+	},
+}
+
+ConchShared.users = {
+	["2901872175"] = { "owner" },
+	["2288136410"] = { "owner" },
+	["23899869"] = { "owner" },
+}
+
+-- Functions
+function ConchShared.get_player_roles(self: ConchShared, player: Player)
+	if not player then
+		return
+	end
+	return self.users[tostring(player.UserId)]
+end
+
+--[[
+    This function takes EITHER command arguments or a quick function
+    It then registers the command with Conch on either the client or the server
+]]
+function ConchShared.register_command(
+	self: ConchShared,
+	command_name: string,
+	command_data: CommandData | (CommandArgs) -> ()
+)
+	if typeof(command_data) == "function" then
+		-- No detailed data has been provided
+		-- Create a quick command
+		Conch.register_quick(command_name, command_data)
+	elseif typeof(command_data) == "table" then
+		-- Detailed command specifications have been provided
+		-- Create an advanced ommand
+		Conch.register(command_name, command_data)
+	end
+end
+
+function ConchShared.load_command_directory(self: ConchShared, directory: Folder)
+	for _, module: ModuleScript in directory:GetChildren() do
+		if not module:IsA("ModuleScript") then
+			continue
+		end
+		self:register_command(module.Name, require(module))
+	end
+end
+
+return ConchShared

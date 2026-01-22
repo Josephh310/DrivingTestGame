@@ -5,6 +5,7 @@
 ]]
 
 local ServerScriptService = game:GetService("ServerScriptService")
+local ConchServer = require(ServerScriptService.Services.Conch.ConchServer)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
 local MarketplaceServiceServer = require(ServerScriptService.Services.MarketplaceService.MarketplaceServiceServer)
 local PhysicsServiceServer = require(ServerScriptService.Services.PhysicsService.PhysicsServiceServer)
@@ -16,3 +17,4 @@ MarketplaceServiceServer:init()
 PhysicsServiceServer:init()
 VehicleServiceServer:init()
 SkipServiceServer:init()
+ConchServer:init()
