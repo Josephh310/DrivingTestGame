@@ -11,12 +11,22 @@ local InterfaceController = {
 
 -- Dependancies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
 local Observers = require(ReplicatedStorage.Packages.Observers)
 
 -- Types
 export type InterfaceController = typeof(InterfaceController)
 
 -- Functions
+function InterfaceController._set_reset_enabled(self: InterfaceController, state: boolean)
+	repeat
+		local success = pcall(function()
+			StarterGui:SetCore("ResetButtonCallback", state)
+		end)
+		task.wait()
+	until success
+end
+
 function InterfaceController.init(self: InterfaceController)
 	-- Load and cache game HUD
 	for _, module in script.GameHUD:GetChildren() do
@@ -41,6 +51,9 @@ function InterfaceController.init(self: InterfaceController)
 		local component_observer = require(component_module)
 		Observers.observeTag(component_module.Name, component_observer)
 	end
+
+	-- Disable reset button
+	self:_set_reset_enabled(false)
 end
 
 return InterfaceController
