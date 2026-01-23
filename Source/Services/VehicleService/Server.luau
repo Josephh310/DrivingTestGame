@@ -117,6 +117,7 @@ function VehicleServiceServer.spawn_vehicle(self: VehicleServiceServer, player: 
 end
 
 function VehicleServiceServer.request_equip_vehicle(self: VehicleServiceServer, player: Player, vehicle_name: string)
+    local SUCCESS_MESSAGE = `Successfully equipped vehicle {vehicle_name}!`
 	local owned_vehicles = DataServiceServer:get_value(player, { "vehicles_owned" })
 	if not owned_vehicles then
 		error(`Error fetching {player.Name}'s owned vehicles.`)
@@ -125,9 +126,14 @@ function VehicleServiceServer.request_equip_vehicle(self: VehicleServiceServer, 
 	if not table.find(owned_vehicles, vehicle_name) then
 		return "You don't own this vehicle!"
 	end
-	DataServiceServer:set_value(player, { "equipped_vehicle" }, vehicle_name)
+    DataServiceServer:set_value(player, { "equipped_vehicle" }, vehicle_name)
+    local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
+    if equipped_vehicle then
+        self:reset_vehicle(player)
+        return SUCCESS_MESSAGE
+    end
 	self:spawn_vehicle(player, vehicle_name)
-    return `Successfully equipped vehicle {vehicle_name}!`
+    return SUCCESS_MESSAGE
 end
 
 function VehicleServiceServer.reset_vehicle(self: VehicleServiceServer, player: Player)
