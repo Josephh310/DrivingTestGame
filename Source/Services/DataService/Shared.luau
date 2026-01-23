@@ -13,6 +13,7 @@ local DataServiceShared = {}
 export type PlayerData = {
 	stage: number,
 	skips: number,
+    badges: { string },
 	vehicles: { string },
 	equipped_vehicle: string,
 	products_owned: { string },
@@ -22,6 +23,7 @@ export type PlayerData = {
 DataServiceShared.template = {
 	stage = 0,
 	skips = 0,
+    badges = {},
 	vehicles = {},
 	equipped_vehicle = "",
 	products_owned = {},
