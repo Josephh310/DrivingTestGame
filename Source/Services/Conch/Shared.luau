@@ -31,9 +31,9 @@ ConchShared.roles = {
 }
 
 ConchShared.users = {
-	["2901872175"] = { "owner" },
-	["2288136410"] = { "owner" },
-	["23899869"] = { "owner" },
+	["2901872175"] = { "owner" }, -- BreakLoop
+	["2288136410"] = { "owner" }, -- 010DevX101
+	["23899869"] = { "owner" }, -- MustacheJoey
 }
 
 -- Functions
