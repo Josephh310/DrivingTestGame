@@ -121,6 +121,9 @@
             "$className": "Folder",
             "Server": {
               "$className": "Folder",
+              "GiveBadge": {
+                "$path": "Source/Services/Conch/Commands/Server/GiveBadge.luau"
+              },
               "Kick": {
                 "$path": "Source/Services/Conch/Commands/Server/Kick.luau"
               },
