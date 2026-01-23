@@ -42,6 +42,12 @@
             "MarketplaceServiceClient": {
               "$path": "Source/Services/MarketplaceService/Client.luau"
             },
+            "ProductHandlers": {
+              "$className": "Folder",
+              "ProductHandlersClient": {
+                "$path": "Source/Services/MarketplaceService/ProductHandlers/Client.luau"
+              }
+            },
             "MarketplaceServiceShared": {
               "$path": "Source/Services/MarketplaceService/Shared.luau"
             }
@@ -129,6 +135,12 @@
         },
         "MarketplaceService": {
           "$className": "Folder",
+          "ProductHandlers": {
+            "$className": "Folder",
+            "ProductHandlersServer": {
+              "$path": "Source/Services/MarketplaceService/ProductHandlers/Server.luau"
+            }
+          },
           "MarketplaceServiceServer": {
             "$path": "Source/Services/MarketplaceService/Server.luau"
           }
