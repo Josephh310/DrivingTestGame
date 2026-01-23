@@ -24,43 +24,30 @@ function GameShop._close_button_clicked()
 	InterfaceUtils.toggle_screen("GameShop")
 end
 
+function GameShop._load_gamepass_frame(pass_name: string, pass_frame: Frame)
+	local pass_info = MarketplaceServiceClient:get_product_data(pass_name)
+	pass_frame.Buttons.BuyWithRobux.Price.Text = pass_info.PriceInRobux
+	pass_frame.GamepassImage.Image = `rbxassetid://{pass_info.IconImageAssetId}`
+	pass_frame.Title.Text = string.upper(pass_info.DisplayName)
+end
+
+function GameShop._load_purchase_buttons(pass_name: string, robux_frame: Frame)
+	local pass_info = MarketplaceServiceClient:get_product_data(pass_name)
+	robux_frame.BuyWithRobux.Price.Text = pass_info.PriceInRobux
+end
+
 function GameShop.init()
-	-- TODO
+	-- Gamepasses
+	task.defer(GameShop._load_gamepass_frame, "exclusive_vehicles", GameShopContent.Passes.ExclusiveVehicle)
+	task.defer(GameShop._load_gamepass_frame, "plate_customisation", GameShopContent.Passes.PlateCustomise)
+	task.defer(GameShop._load_gamepass_frame, "color_customisation", GameShopContent.Passes.ColorCustomise)
+	task.defer(GameShop._load_gamepass_frame, "speed_boost", GameShopContent.Passes.SpeedBoost)
 
-	-- Get product information
-	local starter_pack_info = MarketplaceServiceClient:get_product_data("starter_pack")
-	local exclusive_vehicles_info = MarketplaceServiceClient:get_product_data("exclusive_vehicles")
-	local plate_customisation_info = MarketplaceServiceClient:get_product_data("plate_customisation")
-	local speed_boost_info = MarketplaceServiceClient:get_product_data("speed_boost")
-	local color_customisation = MarketplaceServiceClient:get_product_data("color_customisation")
-	local skip_1_info = MarketplaceServiceClient:get_product_data("skip_1")
-	local skip_5_info = MarketplaceServiceClient:get_product_data("skip_5")
-	local skip_10_info = MarketplaceServiceClient:get_product_data("skip_10")
-	local skip_30_info = MarketplaceServiceClient:get_product_data("skip_30")
-
-	-- Exclusive vehicles
-	GameShopContent.Passes.ExclusiveVehicle.Buttons.BuyWithRobux.Price.Text = exclusive_vehicles_info.PriceInRobux
-
-	-- Plate customisation
-	GameShopContent.Passes.PlateCustomise.Buttons.BuyWithRobux.Price.Text = plate_customisation_info.PriceInRobux
-
-	-- Speed boost
-	GameShopContent.Passes.SpeedBoost.Buttons.BuyWithRobux.Price.Text = speed_boost_info.PriceInRobux
-
-	-- Color customisation
-	GameShopContent.Passes.ColorCustomise.Buttons.BuyWithRobux.Price.Text = color_customisation.PriceInRobux
-
-	-- Skip 1
-	GameShopContent.Skips.Content.Buttons.Skip1.BuyWithRobux.Price.Text = skip_1_info.PriceInRobux
-
-	-- Skip 5
-	GameShopContent.Skips.Content.Buttons.Skip5.BuyWithRobux.Price.Text = skip_5_info.PriceInRobux
-
-	-- Skip 10
-	GameShopContent.Skips.Content.Buttons.Skip10.BuyWithRobux.Price.Text = skip_10_info.PriceInRobux
-
-	-- Skip 30
-	GameShopContent.Skips.Content.Buttons.Skip30.BuyWithRobux.Price.Text = skip_30_info.PriceInRobux
+	-- Skips
+	task.defer(GameShop._load_purchase_buttons, "skip_1", GameShopContent.Skips.Content.Buttons.Skip1)
+	task.defer(GameShop._load_purchase_buttons, "skip_5", GameShopContent.Skips.Content.Buttons.Skip5)
+	task.defer(GameShop._load_purchase_buttons, "skip_10", GameShopContent.Skips.Content.Buttons.Skip10)
+	task.defer(GameShop._load_purchase_buttons, "skip_30", GameShopContent.Skips.Content.Buttons.Skip30)
 
 	-- Button connections
 	FrameCloseButton.MouseButton1Click:Connect(GameShop._close_button_clicked)
