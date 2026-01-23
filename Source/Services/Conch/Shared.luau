@@ -16,6 +16,7 @@ ConchShared.permissions = {
 	["kick_players"] = 1,
 	["edit_user_data"] = 2,
 	["spawn_vehicles"] = 3,
+	["award_badges"] = 4,
 }
 
 ConchShared.roles = {
@@ -27,6 +28,7 @@ ConchShared.roles = {
 		ConchShared.permissions.kick_players,
 		ConchShared.permissions.edit_user_data,
 		ConchShared.permissions.spawn_vehicles,
+		ConchShared.permissions.award_badges,
 	},
 }
 
