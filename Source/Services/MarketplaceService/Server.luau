@@ -10,6 +10,7 @@ local MarketplaceServer = {
 
 -- Dependancies
 local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
@@ -199,7 +200,6 @@ function MarketplaceServer.prompt_gift_purchase(
 end
 
 function MarketplaceServer.init(self: MarketplaceServer)
-	self.networker = Networker.server.new("MarketplaceService", self, {})
 	self.networker = Networker.server.new("MarketplaceService", self, {
 		self.prompt_purchase,
 		self.prompt_gift_purchase,
