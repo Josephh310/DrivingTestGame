@@ -5,8 +5,6 @@
 ]]
 
 local MarketplaceServer = {
-	products_loaded = false,
-	product_cache = {},
 }
 
 -- Dependancies
@@ -26,17 +24,9 @@ export type ReceiptInfo = {
 	ProductId: number,
 	CurrencyType: Enum.CurrencyType,
 	CurrencySpent: number,
-	RecipientId: number?, -- Custom field for gifts
 }
 
 -- Functions
-function MarketplaceServer._process_receipt(self: MarketplaceServer, reciept_info)
-	--[[
-        Receipt structure
-        {
-            PlayerId: number
-        }
-    ]]
 end
 
 function MarketplaceServer.prompt_purchase(self: MarketplaceServer, player: Player, product_code: string)
