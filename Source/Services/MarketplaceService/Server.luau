@@ -57,6 +57,65 @@ function MarketplaceServer.prompt_purchase(self: MarketplaceServer, player: Play
 		return false, MarketplaceServiceShared.error_codes.marketplace_service_down
 	end
 
+	print(`Prompted {player.Name} to buy {product_code}`)
+	return true, nil
+end
+
+function MarketplaceServer.prompt_gift_purchase(
+	self: MarketplaceServer,
+	gifter: Player,
+	recipient_id: number,
+	product_code: string
+)
+	-- Check the gifter is not gifting to themselves. If so, abort.
+	if gifter.UserId == recipient_id then
+		return false, MarketplaceServiceShared.error_codes.cannot_gift_to_self
+	end
+
+	-- Get the product data and check it exists. If not. abort
+	local product_data = MarketplaceServiceShared.products[product_code]
+	if not product_data then
+		return false, MarketplaceServiceShared.error_codes.product_not_found
+	end
+
+	-- Get the recipient's player. If they're not in the same server, abort.
+	local recipient = Players:GetPlayerByUserId(recipient_id)
+	if not recipient then
+		return false, MarketplaceServiceShared.error_codes.invalid_recipient
+	end
+
+	-- Check if it is a one-time purchase
+	-- If so, ensure that the recipient doesn't already own the gamepass
+	if product_data.purchase_type == MarketplaceServiceShared.product_types.single_purchase then
+		local products_owned = DataServiceServer:get_value(recipient, { "products_owned" })
+		if table.find(products_owned, product_code) then
+			return false, MarketplaceServiceShared.error_codes.recipient_owns_product
+		end
+	end
+
+	-- Prompt the purchase
+	local success, err = pcall(function()
+		return MarketplaceService:PromptProductPurchase(
+			gifter,
+			product_data.product_id,
+			false,
+			Enum.CurrencyType.Robux,
+			recipient_id
+		)
+	end)
+
+	if not success then
+		warn(`Failed to prompt gift purchase: {err}`)
+		return MarketplaceServiceShared.error_codes.marketplace_service_down
+	end
+
+	-- Add purchase intent
+	self.purchase_intent[gifter.UserId + product_data.product_id] = {
+		type = MarketplaceServiceShared.intent_types.gift,
+		recipient = recipient,
+	}
+
+	print(`Prompted {gifter.Name} to buy {product_code} for {recipient.Name}`)
 	return true, nil
 end
 
