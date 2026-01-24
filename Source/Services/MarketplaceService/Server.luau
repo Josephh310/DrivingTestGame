@@ -5,6 +5,7 @@
 ]]
 
 local MarketplaceServer = {
+	purchase_intent = {},
 }
 
 -- Dependancies
@@ -12,6 +13,8 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
+local ProductHandlersServer =
+	require(ServerScriptService.Services.MarketplaceService.ProductHandlers.ProductHandlersServer)
 local Networker = require(ReplicatedStorage.Packages.Networker)
 local MarketplaceServiceShared = require(ReplicatedStorage.Shared.Services.MarketplaceService.MarketplaceServiceShared)
 
