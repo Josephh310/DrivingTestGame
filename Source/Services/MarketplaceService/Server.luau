@@ -204,6 +204,9 @@ function MarketplaceServer.init(self: MarketplaceServer)
 		self.prompt_purchase,
 		self.prompt_gift_purchase,
 	})
+	MarketplaceService.ProcessReceipt = function(...)
+		return self:_process_receipt(...)
+	end
 end
 
 return MarketplaceServer
