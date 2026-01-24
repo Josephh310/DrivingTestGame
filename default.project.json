@@ -127,6 +127,9 @@
               "Kick": {
                 "$path": "Source/Services/Conch/Commands/Server/Kick.luau"
               },
+              "PromptGift": {
+                "$path": "Source/Services/Conch/Commands/Server/PromptGift.luau"
+              },
               "SpawnVehicle": {
                 "$path": "Source/Services/Conch/Commands/Server/SpawnVehicle.luau"
               }
