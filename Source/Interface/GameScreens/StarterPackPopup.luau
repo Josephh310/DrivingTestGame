@@ -16,6 +16,8 @@ function StarterPack.show()
 	StarterPackFrame.Visible = true
 end
 
-function StarterPack.init() end
+function StarterPack.init()
+	StarterPack.hide_ui_when_open = false
+end
 
 return StarterPack
