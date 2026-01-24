@@ -29,11 +29,25 @@ function GameShop._load_gamepass_frame(pass_name: string, pass_frame: Frame)
 	pass_frame.Buttons.BuyWithRobux.Price.Text = pass_info.PriceInRobux
 	pass_frame.GamepassImage.Image = `rbxassetid://{pass_info.IconImageAssetId}`
 	pass_frame.Title.Text = string.upper(pass_info.DisplayName)
+	pass_frame.Buttons.BuyWithRobux.Background.MouseButton1Click:Connect(function()
+		MarketplaceServiceClient:purchase_product(pass_name)
+		InterfaceUtils.toggle_screen("GameShop")
+	end)
+	pass_frame.Buttons.Gift.MouseButton1Click:Connect(function()
+		InterfaceUtils.toggle_screen("GiftScreen", pass_name)
+	end)
 end
 
 function GameShop._load_purchase_buttons(pass_name: string, robux_frame: Frame)
 	local pass_info = MarketplaceServiceClient:get_product_data(pass_name)
 	robux_frame.BuyWithRobux.Price.Text = pass_info.PriceInRobux
+	robux_frame.BuyWithRobux.Background.MouseButton1Click:Connect(function()
+		MarketplaceServiceClient:purchase_product(pass_name)
+		InterfaceUtils.toggle_screen("GameShop")
+	end)
+	robux_frame.giftbutton.MouseButton1Click:Connect(function()
+		InterfaceUtils.toggle_screen("GiftScreen", pass_name)
+	end)
 end
 
 function GameShop.init()

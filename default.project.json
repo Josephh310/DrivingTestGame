@@ -76,6 +76,9 @@
           "AnchorModel": {
             "$path": "Source/Modules/AnchorModel.luau"
           },
+          "Fireworks": {
+            "$path": "Source/Modules/Fireworks.luau"
+          },
           "Interface": {
             "$className": "Folder",
             "HSVColorWheel": {
