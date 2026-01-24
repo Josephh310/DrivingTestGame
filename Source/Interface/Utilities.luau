@@ -67,7 +67,7 @@ function InterfaceUtilities.toggle_overlapping_ui(state: boolean)
 	end
 end
 
-function InterfaceUtilities.toggle_screen(name: string)
+function InterfaceUtilities.toggle_screen(name: string, ...)
 	local screen_data = Interface.GameScreens[name]
 	if not screen_data then
 		warn("Could not find screen data for screen " .. name)
@@ -82,7 +82,7 @@ function InterfaceUtilities.toggle_screen(name: string)
 			InterfaceUtilities.toggle_overlapping_ui(false)
 		end
 		InterfaceUtilities.hide_all_screens()
-		screen_data.show()
+		screen_data.show(...)
 		screen_data.screen_active = true
 	else
 		if not screen_data.hide then
@@ -90,7 +90,7 @@ function InterfaceUtilities.toggle_screen(name: string)
 			return
 		end
 		InterfaceUtilities.toggle_overlapping_ui(true)
-		screen_data.hide()
+		screen_data.hide(...)
 		screen_data.screen_active = false
 	end
 end
