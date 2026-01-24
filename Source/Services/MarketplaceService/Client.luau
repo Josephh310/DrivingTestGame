@@ -14,6 +14,8 @@ local MarketplaceService = game:GetService("MarketplaceService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local MarketplaceServiceShared = require(script.Parent.MarketplaceServiceShared)
 local Networker = require(ReplicatedStorage.Packages.Networker)
+local ProductHandlersClient =
+	require(ReplicatedStorage.Shared.Services.MarketplaceService.ProductHandlers.ProductHandlersClient)
 
 -- Types
 export type MarketplaceClient = typeof(MarketplaceClient)
@@ -44,6 +46,16 @@ function MarketplaceClient.get_product_data(self: MarketplaceClient, product_cod
 	end
 
 	return product_data
+end
+
+function MarketplaceClient.product_purchased(self: MarketplaceClient, product_code: string)
+	-- Get client handlers
+	local handlers = ProductHandlersClient[product_code]
+
+	-- Call the product's on_recieved handler
+	if handlers and handlers.on_recieved then
+		handlers.on_recieved()
+	end
 end
 
 function MarketplaceClient.init(self: MarketplaceClient)
