@@ -1,5 +1,10 @@
 local MarketplaceShared = {}
 
+MarketplaceShared.intent_types = {
+	normal = 1,
+	gift = 2,
+}
+
 MarketplaceShared.product_types = {
 	single_purchase = 1,
 	multi_purchase = 2,
