@@ -10,10 +10,14 @@ local MarketplaceClient = {
 }
 
 -- Dependencies
+local CoreGui = game:GetService("CoreGui")
 local MarketplaceService = game:GetService("MarketplaceService")
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local StarterGui = game:GetService("StarterGui")
 local MarketplaceServiceShared = require(script.Parent.MarketplaceServiceShared)
 local Networker = require(ReplicatedStorage.Packages.Networker)
+local Fireworks = require(ReplicatedStorage.Shared.Modules.Fireworks)
 local ProductHandlersClient =
 	require(ReplicatedStorage.Shared.Services.MarketplaceService.ProductHandlers.ProductHandlersClient)
 
@@ -49,12 +53,52 @@ function MarketplaceClient.get_product_data(self: MarketplaceClient, product_cod
 end
 
 function MarketplaceClient.product_purchased(self: MarketplaceClient, product_code: string)
+	-- Get character root
+	local player = Players.LocalPlayer
+	local character = player.Character or player.CharacterAdded:Wait()
+	local root = character.PrimaryPart
+
 	-- Get client handlers
 	local handlers = ProductHandlersClient[product_code]
+
+	-- Launch fireworks
+	Fireworks.launch_fireworks(root.CFrame)
+
+	-- Send notification
+	StarterGui:SetCore("SendNotification", {
+		Title = "Success",
+		Text = "Thank you for your support!",
+		Icon = "rbxassetid://2022095751",
+	})
 
 	-- Call the product's on_recieved handler
 	if handlers and handlers.on_recieved then
 		handlers.on_recieved()
+	end
+end
+
+function MarketplaceClient.purchase_product(self: MarketplaceClient, product_code: string)
+	local success, response = self.networker:fetch("prompt_purchase", product_code)
+	if not success then
+		StarterGui:SetCore("SendNotification", {
+			Title = "Error",
+			Text = response,
+			Icon = "rbxassetid://2022095316",
+		})
+	end
+end
+
+function MarketplaceClient.gift_product(self: MarketplaceClient, product_code: string, recipient: Player)
+	if not recipient then
+		return
+	end
+	local success, response = self.networker:fetch("prompt_gift_purchase", recipient, product_code)
+	if not success then
+		StarterGui:SetCore("SendNotification", {
+			Title = "Error",
+			Text = response,
+			Icon = "rbxassetid://2022095316",
+		})
 	end
 end
 
