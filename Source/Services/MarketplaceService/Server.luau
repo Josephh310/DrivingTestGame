@@ -200,6 +200,10 @@ end
 
 function MarketplaceServer.init(self: MarketplaceServer)
 	self.networker = Networker.server.new("MarketplaceService", self, {})
+	self.networker = Networker.server.new("MarketplaceService", self, {
+		self.prompt_purchase,
+		self.prompt_gift_purchase,
+	})
 end
 
 return MarketplaceServer
