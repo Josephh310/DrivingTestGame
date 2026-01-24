@@ -144,11 +144,11 @@ end
 function MarketplaceServer.prompt_gift_purchase(
 	self: MarketplaceServer,
 	gifter: Player,
-	recipient_id: number,
+	recipient: Player,
 	product_code: string
 )
 	-- Check the gifter is not gifting to themselves. If so, abort.
-	if gifter.UserId == recipient_id then
+	if gifter == recipient then
 		return false, MarketplaceServiceShared.error_codes.cannot_gift_to_self
 	end
 
@@ -159,7 +159,6 @@ function MarketplaceServer.prompt_gift_purchase(
 	end
 
 	-- Get the recipient's player. If they're not in the same server, abort.
-	local recipient = Players:GetPlayerByUserId(recipient_id)
 	if not recipient then
 		return false, MarketplaceServiceShared.error_codes.invalid_recipient
 	end
@@ -180,7 +179,7 @@ function MarketplaceServer.prompt_gift_purchase(
 			product_data.product_id,
 			false,
 			Enum.CurrencyType.Robux,
-			recipient_id
+			recipient.UserId
 		)
 	end)
 
