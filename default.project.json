@@ -52,6 +52,12 @@
               "$path": "Source/Services/MarketplaceService/Shared.luau"
             }
           },
+          "MusicService": {
+            "$className": "Folder",
+            "MusicServiceClient": {
+              "$path": "Source/Services/MusicService/Client.luau"
+            }
+          },
           "SkipService": {
             "$className": "Folder",
             "SkipServiceClient": {
