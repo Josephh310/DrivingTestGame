@@ -2,6 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameShop = {}
 
 -- Dependencies
+local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
 local MarketplaceServiceClient = require(ReplicatedStorage.Shared.Services.MarketplaceService.MarketplaceServiceClient)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
@@ -26,26 +27,31 @@ end
 
 function GameShop._load_gamepass_frame(pass_name: string, pass_frame: Frame)
 	local pass_info = MarketplaceServiceClient:get_product_data(pass_name)
-	pass_frame.Buttons.BuyWithRobux.Price.Text = pass_info.PriceInRobux
+	pass_frame.Buttons.Buy.Price.Text = pass_info.PriceInRobux
 	pass_frame.GamepassImage.Image = `rbxassetid://{pass_info.IconImageAssetId}`
 	pass_frame.Title.Text = string.upper(pass_info.DisplayName)
-	pass_frame.Buttons.BuyWithRobux.Background.MouseButton1Click:Connect(function()
+	pass_frame.Buttons.Buy.MouseButton1Click:Connect(function()
 		MarketplaceServiceClient:purchase_product(pass_name)
 		InterfaceUtils.toggle_screen("GameShop")
 	end)
 	pass_frame.Buttons.Gift.MouseButton1Click:Connect(function()
 		InterfaceUtils.toggle_screen("GiftScreen", pass_name)
 	end)
+	DataServiceClient.connect_to_value_changed({ "products_owned" }, function(new_products)
+		if table.find(new_products, pass_name) then
+			pass_frame.Buttons.Buy.Visible = false
+		end
+	end)
 end
 
 function GameShop._load_purchase_buttons(pass_name: string, robux_frame: Frame)
 	local pass_info = MarketplaceServiceClient:get_product_data(pass_name)
-	robux_frame.BuyWithRobux.Price.Text = pass_info.PriceInRobux
-	robux_frame.BuyWithRobux.Background.MouseButton1Click:Connect(function()
+	robux_frame.Buy.Price.Text = pass_info.PriceInRobux
+	robux_frame.Buy.MouseButton1Click:Connect(function()
 		MarketplaceServiceClient:purchase_product(pass_name)
 		InterfaceUtils.toggle_screen("GameShop")
 	end)
-	robux_frame.giftbutton.MouseButton1Click:Connect(function()
+	robux_frame.Gift.MouseButton1Click:Connect(function()
 		InterfaceUtils.toggle_screen("GiftScreen", pass_name)
 	end)
 end
