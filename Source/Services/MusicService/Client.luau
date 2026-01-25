@@ -47,4 +47,25 @@ function MusicController.modify_queue(self: MusicController, position_shift: num
 
 	self:_edit_display(` #{self.current_song_index} - {self.current_song.Name}`, 16, "Ubuntu")
 end
+
+function MusicController.toggle_music(self: MusicController, enabled: boolean)
+	if not self.current_song then
+		warn("No loaded song to toggle.")
+		return
+	end
+
+	if self._ended_connection then
+		self._ended_connection:Disconnect()
+		self._ended_connection = nil
+	end
+
+	if enabled == true then
+		self.current_song:Play()
+		self._ended_connection = self.current_song.Ended:Connect(function()
+			self:modify_queue(1)
+		end)
+	else
+		self.current_song:Stop()
+	end
+end
 return MusicController
