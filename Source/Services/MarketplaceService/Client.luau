@@ -10,7 +10,6 @@ local MarketplaceClient = {
 }
 
 -- Dependencies
-local CoreGui = game:GetService("CoreGui")
 local MarketplaceService = game:GetService("MarketplaceService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
