@@ -63,10 +63,6 @@ function MarketplaceServer._grant_product(
 		purchase_actions.on_recieved(player)
 		print(`Called server on_recieved for {player.Name}`)
 	end
-
-	-- Pass the purchase to the client
-	print(`Passed product purchase to the client`)
-	self.networker:fire(player, "product_purchased", product_code)
 end
 
 function MarketplaceServer._process_receipt(self: MarketplaceServer, reciept_info: ReceiptInfo)
@@ -100,10 +96,24 @@ function MarketplaceServer._process_receipt(self: MarketplaceServer, reciept_inf
 
 	-- If the intent is to gift, then gift to the player stored in the intent
 	if intent and intent.type == MarketplaceServiceShared.intent_types.gift then
+		-- Grant the product to the recipient
 		self:_grant_product(intent.recipient, product_code, reciept_info)
+
+		-- Pass purchase to both the purchaser and the recipient to show it was a success + apply client effects
+		local players_involved = {
+			intent.recipient,
+			player,
+		}
+		self.networker:fire(players_involved, "process_purchase", product_code, player.UserId, intent.recipient.UserId)
+
+		-- Product has been granted, intent can be removed
 		self.purchase_intent[intent_key] = nil
 	else
+		-- Grant the product to the purchaser
 		self:_grant_product(player, product_code, reciept_info)
+
+		-- Pass the purchase to the purchaser to show it was a success + apply client effects
+		self.networker:fire(player, "process_purchase", product_code, player.UserId, player.UserId)
 	end
 
 	return Enum.ProductPurchaseDecision.PurchaseGranted

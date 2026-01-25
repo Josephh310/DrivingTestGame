@@ -51,28 +51,53 @@ function MarketplaceClient.get_product_data(self: MarketplaceClient, product_cod
 	return product_data
 end
 
-function MarketplaceClient.product_purchased(self: MarketplaceClient, product_code: string)
+function MarketplaceClient.process_purchase(
+	self: MarketplaceClient,
+	product_code: string,
+	purchaser_id: number,
+	reciever_id: number
+)
 	-- Get character root
 	local player = Players.LocalPlayer
 	local character = player.Character or player.CharacterAdded:Wait()
 	local root = character.PrimaryPart
 
-	-- Get client handlers
-	local handlers = ProductHandlersClient[product_code]
-
 	-- Launch fireworks
 	Fireworks.launch_fireworks(root.CFrame)
 
-	-- Send notification
-	StarterGui:SetCore("SendNotification", {
-		Title = "Success",
-		Text = "Thank you for your support!",
-		Icon = "rbxassetid://2022095751",
-	})
+	-- Logic
 
-	-- Call the product's on_recieved handler
-	if handlers and handlers.on_recieved then
-		handlers.on_recieved()
+	if purchaser_id == player.UserId then
+		StarterGui:SetCore("SendNotification", {
+			Title = `{(reciever_id == player.UserId and "Purchase") or "Gift"} Successful`,
+			Text = "Thank you for your support!",
+			Icon = "rbxassetid://16776729560",
+		})
+	end
+
+	-- If the player is the reciever of the product ....
+	if reciever_id == player.UserId then
+		-- Get product information
+		local product_info = MarketplaceServiceShared.products[product_code]
+		local product_data = self:get_product_data(product_code)
+
+		-- Send notification
+		local is_gamepass = product_info.purchase_type == MarketplaceServiceShared.product_types.single_purchase
+
+		StarterGui:SetCore("SendNotification", {
+			Title = "Notification",
+			Text = `You've recieved {(is_gamepass and "the " .. product_data.Name .. " gamepass.") or product_data.Name}`,
+			Icon = `rbxassetid://{product_data.IconImageAssetId}`,
+		})
+
+		-- Apply product effects
+		-- Get client handlers
+		local handlers = ProductHandlersClient[product_code]
+
+		-- If a client handler exists for the product, call it
+		if handlers and handlers.on_recieved then
+			handlers.on_recieved()
+		end
 	end
 end
 
@@ -82,7 +107,7 @@ function MarketplaceClient.purchase_product(self: MarketplaceClient, product_cod
 		StarterGui:SetCore("SendNotification", {
 			Title = "Error",
 			Text = response,
-			Icon = "rbxassetid://2022095316",
+			Icon = "rbxassetid://15121391092",
 		})
 	end
 end
@@ -96,7 +121,7 @@ function MarketplaceClient.gift_product(self: MarketplaceClient, product_code: s
 		StarterGui:SetCore("SendNotification", {
 			Title = "Error",
 			Text = response,
-			Icon = "rbxassetid://2022095316",
+			Icon = "rbxassetid://15121391092",
 		})
 	end
 end
