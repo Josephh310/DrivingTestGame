@@ -2,8 +2,17 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Signal = require(ReplicatedStorage.Packages.Signal)
 local TopbarPlus = require(ReplicatedStorage.Packages.TopbarPlus)
+
 local MusicController = {
+	song_queue = nil :: { Sound }?,
+	current_song = nil :: Sound?,
+	current_song_index = nil :: number?,
+	music_changed = nil :: Signal.Signal<Sound, number>?,
+	_ended_connection = nil,
+	music_topbar = nil,
+	menu = nil,
 }
+
 -- Types
 export type MusicController = typeof(MusicController)
 
