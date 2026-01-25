@@ -6,7 +6,7 @@ local ColorCustomise = {
 
 -- Dependencies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local HSVColorWheel = require(ReplicatedStorage.Shared.Modules.Interface.HSVColorWheel)
+local HSVColorWheel = require(ReplicatedStorage.Shared.Modules.HSVColorWheel)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
 -- Constants

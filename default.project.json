@@ -79,11 +79,8 @@
           "Fireworks": {
             "$path": "Source/Modules/Fireworks.luau"
           },
-          "Interface": {
-            "$className": "Folder",
-            "HSVColorWheel": {
-              "$path": "Source/Modules/Interface/HSVColorWheel.luau"
-            }
+          "HSVColorWheel": {
+            "$path": "Source/Modules/HSVColorWheel.luau"
           },
           "ModelReplicationTools": {
             "$path": "Source/Modules/ModelReplicationTools.luau"
