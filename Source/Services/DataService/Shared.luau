@@ -36,7 +36,7 @@ DataServiceShared.leaderstats = {
 
 DataServiceShared.flags = {
 	PROFILE_STORE_NAME = "PlayerStore",
-	MOCK_STORE_IN_STUDIO = false,
+	MOCK_STORE_IN_STUDIO = true,
 }
 
 return DataServiceShared
