@@ -68,4 +68,20 @@ function MusicController.toggle_music(self: MusicController, enabled: boolean)
 		self.current_song:Stop()
 	end
 end
+
+function MusicController.set_soundtrack(self: MusicController, container: Folder?)
+	if self.current_song then
+		self:toggle_music(false)
+	end
+
+	if container ~= nil then
+		self.song_queue = container:GetChildren()
+		self:modify_queue(0)
+		self.menu:unlock()
+	else
+		self.song_queue = nil
+		self.current_song = nil
+		self:_edit_display("No music playing", 16, "Ubuntu")
+	end
+end
 return MusicController
