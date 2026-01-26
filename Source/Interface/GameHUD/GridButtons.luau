@@ -20,6 +20,14 @@ function GridButtons._inventory_button_clicked()
 	InterfaceUtilities.toggle_screen("VehicleInventory")
 end
 
+function GridButtons._buy_skips_clicked()
+	InterfaceUtilities.toggle_screen("GameShop", 1)
+end
+
+function GridButtons._use_skips_clicked()
+	print("Use skips clicked")
+end
+
 function GridButtons._update_skip_timer(time_in_seconds: number)
 	local min, sec = tostring(math.floor(time_in_seconds / 60)), tostring(time_in_seconds % 60)
 	if #sec == 1 then
@@ -35,6 +43,8 @@ end
 function GridButtons.init()
 	GridButtonsFrame.ShopButton.MouseButton1Click:Connect(GridButtons._shop_button_clicked)
 	GridButtonsFrame.InventoryButton.MouseButton1Click:Connect(GridButtons._inventory_button_clicked)
+	GridButtonsFrame.SkipsFrame.SkipsIndicator.MouseButton1Click:Connect(GridButtons._use_skips_clicked)
+	GridButtonsFrame.SkipsFrame.BuySkips.MouseButton1Click:Connect(GridButtons._buy_skips_clicked)
 	SkipServiceClient:listen_to_timer(GridButtons._update_skip_timer)
 	DataServiceClient.connect_to_value_changed({ "skips" }, GridButtons._update_skip_amount)
 end
