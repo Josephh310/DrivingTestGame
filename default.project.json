@@ -71,6 +71,15 @@
             "$className": "Folder",
             "VehicleServiceClient": {
               "$path": "Source/Services/VehicleService/Client.luau"
+            },
+            "Shared": {
+              "$className": "Folder",
+              "Components": {
+                "$path": "Source/Services/VehicleService/Shared/Components"
+              },
+              "Vehicles": {
+                "$path": "Source/Services/VehicleService/Shared/Vehicles.luau"
+              }
             }
           }
         },
@@ -90,15 +99,6 @@
           },
           "ModelReplicationTools": {
             "$path": "Source/Modules/ModelReplicationTools.luau"
-          },
-          "VehicleClient": {
-            "$className": "Folder",
-            "Components": {
-              "$path": "Source/Modules/VehicleClient/Components"
-            }
-          },
-          "VehicleKinds": {
-            "$path": "Source/Modules/VehicleKinds.luau"
           }
         }
       },
@@ -180,6 +180,15 @@
         },
         "VehicleService": {
           "$className": "Folder",
+          "Server": {
+            "$className": "Folder",
+            "Components": {
+              "$path": "Source/Services/VehicleService/Server/Components"
+            },
+            "Vehicles": {
+              "$path": "Source/Services/VehicleService/Server/Vehicles.luau"
+            }
+          },
           "VehicleServiceServer": {
             "$path": "Source/Services/VehicleService/Server.luau"
           }
@@ -189,16 +198,7 @@
         "$className": "Folder"
       },
       "Modules": {
-        "$className": "Folder",
-        "VehicleServer": {
-          "$className": "Folder",
-          "Components": {
-            "$path": "Source/Modules/VehicleServer/Components"
-          },
-          "Kinds": {
-            "$path": "Source/Modules/VehicleServer/Kinds.luau"
-          }
-        }
+        "$className": "Folder"
       }
     },
     "StarterPlayer": {
