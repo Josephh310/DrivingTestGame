@@ -16,7 +16,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local StarterGui = game:GetService("StarterGui")
 local MarketplaceServiceShared = require(script.Parent.MarketplaceServiceShared)
 local Networker = require(ReplicatedStorage.Packages.Networker)
-local Fireworks = require(ReplicatedStorage.Shared.Modules.Fireworks)
+local Fireworks = require(ReplicatedStorage.Shared.Modules.Utilities.Fireworks)
 local ProductHandlersClient =
 	require(ReplicatedStorage.Shared.Services.MarketplaceService.ProductHandlers.ProductHandlersClient)
 

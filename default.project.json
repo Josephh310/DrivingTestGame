@@ -88,17 +88,20 @@
         },
         "Modules": {
           "$className": "Folder",
-          "AnchorModel": {
-            "$path": "Source/Modules/AnchorModel.luau"
-          },
-          "Fireworks": {
-            "$path": "Source/Modules/Fireworks.luau"
-          },
-          "HSVColorWheel": {
-            "$path": "Source/Modules/HSVColorWheel.luau"
-          },
-          "ModelReplicationTools": {
-            "$path": "Source/Modules/ModelReplicationTools.luau"
+          "Utilities": {
+            "$className": "Folder",
+            "AnchorModel": {
+              "$path": "Source/Modules/Utilities/AnchorModel.luau"
+            },
+            "Fireworks": {
+              "$path": "Source/Modules/Utilities/Fireworks.luau"
+            },
+            "HSVColorWheel": {
+              "$path": "Source/Modules/Utilities/HSVColorWheel.luau"
+            },
+            "ModelReplicationTools": {
+              "$path": "Source/Modules/Utilities/ModelReplicationTools.luau"
+            }
           }
         }
       },
