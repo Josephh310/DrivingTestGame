@@ -15,11 +15,10 @@ local Networker = require(ReplicatedStorage.Packages.Networker)
 
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
 local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.ModelReplicationTools)
-local Components = require(ServerScriptService.Modules.VehicleServer.Components)
+local Components = require(ServerScriptService.Services.VehicleService.Server.Components)
+local ServerVehicleKinds = require(ServerScriptService.Services.VehicleService.Server.Vehicles)
+local VehicleKinds = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Vehicles)
 
-local ServerVehicleKinds = require(ServerScriptService.Modules.VehicleServer.Kinds)
-
-local VehicleKinds = require(ReplicatedStorage.Shared.Modules.VehicleKinds)
 local SpawnedVehicles = workspace.Vehicles
 
 local cleanup: { [Player]: { (...any) -> () } } = {}
