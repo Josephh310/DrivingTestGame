@@ -1,7 +1,8 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameShop = {}
 
 -- Dependencies
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
 local MarketplaceServiceClient = require(ReplicatedStorage.Shared.Services.MarketplaceService.MarketplaceServiceClient)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
@@ -15,9 +16,18 @@ local FrameCloseButton = GameShopFrame.Topbar.Close
 -- Functions
 function GameShop.hide()
 	GameShopFrame.Visible = false
+	GameShopFrame.Shop.ScrollingFrame.CanvasPosition = Vector2.zero
 end
 
-function GameShop.show()
+function GameShop.show(scroll_progress: number) -- 0 -> 1
+	if scroll_progress then
+		local absolute_canvas_y = GameShopFrame.Shop.ScrollingFrame.AbsoluteCanvasSize.Y
+		local absolute_y_size = GameShopFrame.Shop.ScrollingFrame.AbsoluteSize.Y
+		local y_scroll_position = (absolute_canvas_y - absolute_y_size) * scroll_progress
+		TweenService:Create(GameShopFrame.Shop.ScrollingFrame, TweenInfo.new(0.25), {
+			CanvasPosition = Vector2.new(0, y_scroll_position),
+		}):Play()
+	end
 	GameShopFrame.Visible = true
 end
 
