@@ -112,7 +112,16 @@ end
 -- Public functions
 function DataServiceServer.get_profile(self: DataServiceServer, player: Player)
 	-- Return full profile, including ProfileStore values
-	return self._profiles[player]
+	local profile = nil
+
+	-- Repeat until the player's profile is added or the player leaves the game
+	repeat
+		profile = self._profiles[player]
+		task.wait()
+	until profile ~= nil or player.Parent ~= Players
+
+	-- Return the profile, or nil if the profile was never able to be created.
+	return profile
 end
 
 function DataServiceServer.get_data(self: DataServiceServer, player: Player)
