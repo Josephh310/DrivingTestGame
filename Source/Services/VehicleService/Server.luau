@@ -7,6 +7,7 @@
 local VehicleServiceServer = {}
 
 -- Dependencies
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
@@ -154,9 +155,23 @@ function VehicleServiceServer.reset_vehicle(self: VehicleServiceServer, player: 
 end
 
 function VehicleServiceServer.init(self: VehicleServiceServer)
-	self.networker = Networker.server.new("VehicleService", self, { self.request_equip_vehicle, self.reset_vehicle })
-	game:GetService("Players").PlayerRemoving:Connect(function(player)
+	self.networker = Networker.server.new("VehicleService", self, {
+		self.request_equip_vehicle,
+		self.reset_vehicle,
+	})
+
+	-- Vehicle removal logic
+	Players.PlayerRemoving:Connect(function(player)
 		cleanup[player] = nil
+	end)
+
+	-- Vehicle spawning logic
+	Players.PlayerAdded:Connect(function(player: Player)
+		local stage = DataServiceServer:get_value(player, { "stage" })
+		local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
+		if stage > 0 and VehicleKinds[equipped_vehicle] ~= nil then
+			self:spawn_vehicle(player)
+		end
 	end)
 end
 
