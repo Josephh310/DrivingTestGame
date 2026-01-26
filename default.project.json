@@ -17,7 +17,7 @@
               "Client": {
                 "$className": "Folder",
                 "TestClient": {
-                  "$path": "Source/Services/Conch/Commands/client/TestClient.luau"
+                  "$path": "Source/Services/Conch/Commands/Client/TestClient.luau"
                 }
               }
             },
@@ -128,16 +128,16 @@
             "Server": {
               "$className": "Folder",
               "GiveBadge": {
-                "$path": "Source/Services/Conch/Commands/server/GiveBadge.luau"
+                "$path": "Source/Services/Conch/Commands/Server/GiveBadge.luau"
               },
               "Kick": {
-                "$path": "Source/Services/Conch/Commands/server/Kick.luau"
+                "$path": "Source/Services/Conch/Commands/Server/Kick.luau"
               },
               "PromptGift": {
-                "$path": "Source/Services/Conch/Commands/server/PromptGift.luau"
+                "$path": "Source/Services/Conch/Commands/Server/PromptGift.luau"
               },
               "SpawnVehicle": {
-                "$path": "Source/Services/Conch/Commands/server/SpawnVehicle.luau"
+                "$path": "Source/Services/Conch/Commands/Server/SpawnVehicle.luau"
               }
             }
           },
