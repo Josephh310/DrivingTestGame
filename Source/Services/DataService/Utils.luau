@@ -9,7 +9,7 @@ export type Path = { string }
 local DataServiceUtils = {}
 
 --Functions
-function DataServiceUtils.get_nested_value(tbl, path: Path)
+function DataServiceUtils.get_nested_value(tbl: { [string]: any }, path: Path): any
 	if not tbl or not path then
 		return nil
 	end
