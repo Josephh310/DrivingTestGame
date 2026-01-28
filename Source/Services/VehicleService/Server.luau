@@ -13,9 +13,8 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local TextService = game:GetService("TextService")
 
 local Networker = require(ReplicatedStorage.Packages.Networker)
-
+local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.Utilities.ModelReplicationTools)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
-local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.ModelReplicationTools)
 local Components = require(ServerScriptService.Services.VehicleService.Server.Components)
 local ServerVehicleKinds = require(ServerScriptService.Services.VehicleService.Server.Vehicles)
 local VehicleKinds = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Vehicles)
