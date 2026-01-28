@@ -58,6 +58,15 @@
               "$path": "Source/Services/MusicService/Client.luau"
             }
           },
+          "ObstacleService": {
+            "$className": "Folder",
+            "ObstacleServiceClient": {
+              "$path": "Source/Services/ObstacleService/Client.luau"
+            },
+            "ObstacleServiceUtils": {
+              "$path": "Source/Services/ObstacleService/Utils.luau"
+            }
+          },
           "SkipService": {
             "$className": "Folder",
             "SkipServiceClient": {
@@ -88,6 +97,15 @@
         },
         "Modules": {
           "$className": "Folder",
+          "Components": {
+            "$className": "Folder",
+            "Client": {
+              "$className": "Folder",
+              "CheckpointHitbox": {
+                "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
+              }
+            }
+          },
           "Utilities": {
             "$className": "Folder",
             "AnchorModel": {
@@ -166,6 +184,12 @@
             "$path": "Source/Services/MarketplaceService/Server.luau"
           }
         },
+        "ObstacleService": {
+          "$className": "Folder",
+          "ObstacleServiceServer": {
+            "$path": "Source/Services/ObstacleService/Server.luau"
+          }
+        },
         "PhysicsService": {
           "$className": "Folder",
           "CollisionsServer": {
@@ -201,7 +225,16 @@
         "$className": "Folder"
       },
       "Modules": {
-        "$className": "Folder"
+        "$className": "Folder",
+        "Components": {
+          "$className": "Folder",
+          "Server": {
+            "$className": "Folder",
+            "CheckpointHitbox": {
+              "$path": "Source/Modules/Components/Server/CheckpointHitbox.luau"
+            }
+          }
+        }
       }
     },
     "StarterPlayer": {
