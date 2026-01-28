@@ -11,7 +11,6 @@ local Components = require(ReplicatedStorage.Shared.Services.VehicleService.Shar
 local VehicleKinds = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Vehicles)
 local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.ModelReplicationTools)
 local Networker = require(ReplicatedStorage.Packages.Networker)
-local AnchorModel = require(ReplicatedStorage.Shared.Modules.AnchorModel)
 
 local player = Players.LocalPlayer
 
@@ -49,16 +48,15 @@ function VehicleServiceClient._setup_components(self: VehicleServiceClient)
 	end
 end
 
-function VehicleServiceClient.force_sit(self: VehicleServiceClient)
+function VehicleServiceClient._force_sit(
+    self: VehicleServiceClient
+)
 	local character = player.Character or player.CharacterAdded:Wait()
 	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
-	local vehicle_seat = self.vehicle_seat
 	humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-	AnchorModel(character, true)
-	if vehicle_seat.Occupant ~= humanoid then
-		vehicle_seat:Sit(humanoid)
-	end
-	AnchorModel(character, false)
+    return function()
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+    end
 end
 
 function VehicleServiceClient.setup_vehicle(
@@ -74,18 +72,26 @@ function VehicleServiceClient.setup_vehicle(
 	self.scripted = self.vehicle_model.Scripted :: Model
 	self.vehicle_seat = self.scripted.VehicleSeat :: VehicleSeat
 
+    table.insert(cleanup, self:_force_sit())
 	self:_setup_components()
-	self:force_sit()
 end
 
-function VehicleServiceClient.reset_vehicle(self: VehicleServiceClient)
-	for _, fn in cleanup do
+function VehicleServiceClient.cleanup()
+    for _, fn in cleanup do
 		fn()
 	end
+end
+
+function VehicleServiceClient.reset_vehicle(
+    self: VehicleServiceClient
+)
 	self.networker:fire("reset_vehicle")
 end
 
-function VehicleServiceClient.equip_vehicle(self: VehicleServiceClient, vehicle_name: string): string
+function VehicleServiceClient.equip_vehicle(
+    self: VehicleServiceClient,
+    vehicle_name: string
+): string
 	return self.networker:fetch("request_equip_vehicle", vehicle_name)
 end
 
