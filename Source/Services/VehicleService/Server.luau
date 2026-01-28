@@ -238,6 +238,64 @@ function VehicleServiceServer._cleanup(
 	end
 end
 
+function VehicleServiceServer._spawn_vehicle(
+    self: VehicleServiceServer,
+    player: Player,
+    position: Vector3?,
+    vehicle: string?
+) -- VehicleOverride is optional
+	-- Grab currently equipped vehicle
+	local equipped_vehicle = vehicle or DataServiceServer:get_value(player, { "equipped_vehicle" })
+	if not equipped_vehicle then
+		return
+	end
+    local spawned_vehicle = SpawnedVehicles:FindFirstChild(player.Name)
+    if spawned_vehicle and spawned_vehicle:IsA("Model") then
+        self:_destroy_vehicle(player, spawned_vehicle)
+    end
+	-- Get vehicle-specific data
+	local vehicle_data = VehicleKinds[equipped_vehicle]
+	if not vehicle_data then
+		error(`Vehicle module for vehicle {equipped_vehicle} does not exist.`)
+	end
+	-- Process vehicle-specific data
+	local vehicle_model = vehicle_data.vehicle_model
+	local vehicle_config = vehicle_data.vehicle_config
+	-- Spawn new vehicle
+	local new_vehicle, reason = self:_spawn_vehicle_model(player, vehicle_model, position)
+	if not new_vehicle then
+		error(`Unable to spawn vehicle for {player.Name} - {reason}`)
+		return
+	end
+    local plate = DataServiceServer:get_value(player, { "plate" })
+    if plate ~= nil then
+        self:_set_plate(player, new_vehicle, plate)
+    end
+    local vehicles = DataServiceServer:get_value(player, { "vehicles" })
+    local color_data: { r: number, g: number, b: number }? = vehicles[equipped_vehicle].color
+    if color_data then
+        self:_customise_color(player, new_vehicle, Color3.fromRGB(
+            color_data.r,
+            color_data.g,
+            color_data.b
+        ))
+    end
+
+	local character = player.Character or player.CharacterAdded:Wait()
+	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
+	if not humanoid then
+		return
+	end
+	humanoid.MaxHealth = vehicle_config.health
+	humanoid.Health = vehicle_config.health
+
+	self:_setup_components(player, new_vehicle, equipped_vehicle)
+	self:_setup_collisions(humanoid, new_vehicle)
+    self:_force_sit(player, new_vehicle)
+
+	self.networker:fire(player, "setup_vehicle", equipped_vehicle, new_vehicle, vehicle_config)
+end
+
 -- Public functions
 function VehicleServiceServer.request_customise_color(
     self: VehicleServiceServer,
@@ -313,64 +371,6 @@ function VehicleServiceServer.request_set_plate(
     save_and_set_plate(text)
 end
 
-function VehicleServiceServer.spawn_vehicle(
-    self: VehicleServiceServer,
-    player: Player,
-    position: Vector3?,
-    vehicle: string?
-) -- VehicleOverride is optional
-	-- Grab currently equipped vehicle
-	local equipped_vehicle = vehicle or DataServiceServer:get_value(player, { "equipped_vehicle" })
-	if not equipped_vehicle then
-		return
-	end
-    local spawned_vehicle = SpawnedVehicles:FindFirstChild(player.Name)
-    if spawned_vehicle and spawned_vehicle:IsA("Model") then
-        self:_destroy_vehicle(player, spawned_vehicle)
-    end
-	-- Get vehicle-specific data
-	local vehicle_data = VehicleKinds[equipped_vehicle]
-	if not vehicle_data then
-		error(`Vehicle module for vehicle {equipped_vehicle} does not exist.`)
-	end
-	-- Process vehicle-specific data
-	local vehicle_model = vehicle_data.vehicle_model
-	local vehicle_config = vehicle_data.vehicle_config
-	-- Spawn new vehicle
-	local new_vehicle, reason = self:_spawn_vehicle_model(player, vehicle_model, position)
-	if not new_vehicle then
-		error(`Unable to spawn vehicle for {player.Name} - {reason}`)
-		return
-	end
-    local plate = DataServiceServer:get_value(player, { "plate" })
-    if plate ~= nil then
-        self:_set_plate(player, new_vehicle, plate)
-    end
-    local vehicles = DataServiceServer:get_value(player, { "vehicles" })
-    local color_data: { r: number, g: number, b: number }? = vehicles[equipped_vehicle].color
-    if color_data then
-        self:_customise_color(player, new_vehicle, Color3.fromRGB(
-            color_data.r,
-            color_data.g,
-            color_data.b
-        ))
-    end
-
-	local character = player.Character or player.CharacterAdded:Wait()
-	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
-	if not humanoid then
-		return
-	end
-	humanoid.MaxHealth = vehicle_config.health
-	humanoid.Health = vehicle_config.health
-
-	self:_setup_components(player, new_vehicle, equipped_vehicle)
-	self:_setup_collisions(humanoid, new_vehicle)
-    self:_force_sit(player, new_vehicle)
-
-	self.networker:fire(player, "setup_vehicle", equipped_vehicle, new_vehicle, vehicle_config)
-end
-
 function VehicleServiceServer.request_equip_vehicle(
     self: VehicleServiceServer,
     player: Player,
@@ -415,6 +415,8 @@ function VehicleServiceServer.init(self: VehicleServiceServer)
 	self.networker = Networker.server.new("VehicleService", self, {
 		self.request_equip_vehicle,
 		self.reset_vehicle,
+        self.request_set_plate,
+        self.request_customise_color
 	})
 
     local function player_added(player: Player)
