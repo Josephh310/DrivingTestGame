@@ -18,23 +18,23 @@ export type PlayerData = {
 	equipped_vehicle: string,
 	products_owned: { string },
 	purchase_history: { any },
-    plate: string?
+	plate: string?,
 }
 
 export type Vehicles = {
-    [string]: {
-        color: { r: number, g: number, b: number }?
-    }
+	[string]: {
+		color: { r: number, g: number, b: number }?,
+	},
 }
 
 DataServiceShared.template = {
 	stage = 0,
 	skips = 0,
 	badges = {},
-	vehicles = {},
+	vehicles = { ["hatchback"] = {} },
 	equipped_vehicle = "",
 	products_owned = {},
-	purchase_history = {}
+	purchase_history = {},
 } :: PlayerData
 
 DataServiceShared.leaderstats = {
