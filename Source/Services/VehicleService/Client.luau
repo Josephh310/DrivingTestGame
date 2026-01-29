@@ -10,6 +10,7 @@ local Players = game:GetService("Players")
 local Components = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Components)
 local VehicleKinds = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Vehicles)
 local Networker = require(ReplicatedStorage.Packages.Networker)
+local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.Utilities.ModelReplicationTools)
 
 local player = Players.LocalPlayer
 
@@ -47,15 +48,13 @@ function VehicleServiceClient._setup_components(self: VehicleServiceClient)
 	end
 end
 
-function VehicleServiceClient._force_sit(
-    self: VehicleServiceClient
-)
+function VehicleServiceClient._force_sit(self: VehicleServiceClient)
 	local character = player.Character or player.CharacterAdded:Wait()
 	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
 	humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
-    return function()
-        humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
-    end
+	return function()
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, true)
+	end
 end
 
 function VehicleServiceClient.setup_vehicle(
@@ -71,26 +70,21 @@ function VehicleServiceClient.setup_vehicle(
 	self.scripted = self.vehicle_model.Scripted :: Model
 	self.vehicle_seat = self.scripted.VehicleSeat :: VehicleSeat
 
-    table.insert(cleanup, self:_force_sit())
+	table.insert(cleanup, self:_force_sit())
 	self:_setup_components()
 end
 
 function VehicleServiceClient.cleanup()
-    for _, fn in cleanup do
+	for _, fn in cleanup do
 		fn()
 	end
 end
 
-function VehicleServiceClient.reset_vehicle(
-    self: VehicleServiceClient
-)
+function VehicleServiceClient.reset_vehicle(self: VehicleServiceClient)
 	self.networker:fire("reset_vehicle")
 end
 
-function VehicleServiceClient.equip_vehicle(
-    self: VehicleServiceClient,
-    vehicle_name: string
-): string
+function VehicleServiceClient.equip_vehicle(self: VehicleServiceClient, vehicle_name: string): string
 	return self.networker:fetch("request_equip_vehicle", vehicle_name)
 end
 

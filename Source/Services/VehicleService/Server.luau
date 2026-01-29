@@ -112,7 +112,8 @@ function VehicleServiceServer._setup_collisions(self: VehicleServiceServer, huma
 		humanoid:TakeDamage(damage)
 	end)
 	humanoid.Died:Connect(function()
-		self:_destroy_vehicle(vehicle_model)
+		local player = Players:GetPlayerFromCharacter(humanoid.Parent)
+		self:_destroy_vehicle(player, vehicle_model)
 	end)
 end
 
@@ -150,7 +151,7 @@ function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer
 	if stage == 0 then
 		return
 	end
-	local Stage = Stages:FindFirstChild(`Stage{stage}`)
+	local Stage = Stages:FindFirstChild(tostring(stage))
 	if not Stage or not Stage:IsA("Folder") then
 		warn(`Invalid stage {stage}!`)
 		return
@@ -176,7 +177,7 @@ function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer
 		end
 		selected_spawn = spawn
 	end
-	self:spawn_vehicle(player, selected_spawn.Position)
+	self:_spawn_vehicle(player, selected_spawn.Position)
 end
 
 function VehicleServiceServer._destroy_vehicle(self: VehicleServiceServer, player: Player, vehicle_model: Model?)
@@ -193,7 +194,7 @@ function VehicleServiceServer._destroy_vehicle(self: VehicleServiceServer, playe
 	explosion.ExplosionType = Enum.ExplosionType.NoCraters
 	explosion.TimeScale = 1.5
 	explosion.BlastRadius = 8
-	explosion.BlastPressure = 0
+	explosion.BlastPressure = 10
 	explosion.DestroyJointRadiusPercent = 0
 	explosion.Position = body.Position
 	explosion.Parent = body
@@ -202,7 +203,7 @@ function VehicleServiceServer._destroy_vehicle(self: VehicleServiceServer, playe
 	for _, weld in vehicle_model:QueryDescendants("WeldConstraint") do
 		weld:Destroy()
 	end
-	task.delay(1, vehicle_model.Destroy, vehicle_model)
+	task.delay(3, vehicle_model.Destroy, vehicle_model)
 	self.networker:fire(player, "cleanup")
 	self:_cleanup(player)
 end
@@ -306,9 +307,10 @@ end
 
 function VehicleServiceServer.request_set_plate(self: VehicleServiceServer, player: Player, original_text: string)
 	local function save_and_set_plate(filtered: string)
+		print("setting to " .. filtered)
 		DataServiceServer:set_value(player, { "plate" }, filtered)
 		local vehicle_model = SpawnedVehicles:FindFirstChild(player.Name)
-		if not vehicle_model or not vehicle_model:IsA("Model") then
+		if vehicle_model and vehicle_model:IsA("Model") then
 			self:_set_plate(player, vehicle_model, filtered)
 		end
 	end
@@ -328,7 +330,7 @@ function VehicleServiceServer.request_set_plate(self: VehicleServiceServer, play
 	end
 	text = string.upper(string.sub(original_text, 1, MAX_PLATE_LENGTH))
 	local success, result = pcall(function()
-		return TextService:FilterStringAsync(original_text, player.UserId)
+		return TextService:FilterStringAsync(text, player.UserId)
 	end)
 	if not success then
 		warn(`Failed to filter text: {result}`)
@@ -352,8 +354,7 @@ function VehicleServiceServer.request_equip_vehicle(
 		return "You don't own this vehicle!"
 	end
 	DataServiceServer:set_value(player, { "equipped_vehicle" }, vehicle_name)
-	local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
-	if equipped_vehicle then
+	if SpawnedVehicles:FindFirstChild(player.Name) then
 		self:reset_vehicle(player)
 		return SUCCESS_MESSAGE
 	end
