@@ -28,7 +28,7 @@ export type Vehicles = {
 }
 
 DataServiceShared.template = {
-	stage = 0,
+	stage = 1,
 	skips = 0,
 	badges = {},
 	vehicles = { ["hatchback"] = {} },
