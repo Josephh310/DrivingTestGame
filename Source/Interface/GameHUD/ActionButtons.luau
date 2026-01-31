@@ -1,6 +1,8 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ActionButtons = {}
 
 -- Dependencies
+local VehicleServiceClient = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceClient)
 local InterfaceUtilities = require(script.Parent.Parent.Utilities)
 
 -- Constants
@@ -9,7 +11,7 @@ local ActionButtonsFrame = Interface.HUD.ActionButtons
 
 --Functions
 function ActionButtons._reset_vehicle_clicked()
-	print("Reset vehicle clicked")
+	VehicleServiceClient.networker:fire("reset_vehicle")
 end
 
 function ActionButtons._troll_clicked()
