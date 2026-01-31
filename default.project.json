@@ -81,14 +81,23 @@
             "VehicleServiceClient": {
               "$path": "Source/Services/VehicleService/Client.luau"
             },
-            "Shared": {
+            "Components": {
               "$className": "Folder",
-              "Components": {
-                "$path": "Source/Services/VehicleService/Shared/Components"
+              "Engine": {
+                "$className": "Folder",
+                "EngineClient": {
+                  "$path": "Source/Services/VehicleService/Components/Engine/Client.luau"
+                }
               },
-              "Vehicles": {
-                "$path": "Source/Services/VehicleService/Shared/Vehicles.luau"
+              "Horn": {
+                "$className": "Folder",
+                "HornClient": {
+                  "$path": "Source/Services/VehicleService/Components/Horn/Client.luau"
+                }
               }
+            },
+            "VehicleTypes": {
+              "$path": "Source/Services/VehicleService/VehicleTypes.luau"
             }
           }
         },
@@ -207,13 +216,13 @@
         },
         "VehicleService": {
           "$className": "Folder",
-          "Server": {
+          "Components": {
             "$className": "Folder",
-            "Components": {
-              "$path": "Source/Services/VehicleService/Server/Components"
-            },
-            "Vehicles": {
-              "$path": "Source/Services/VehicleService/Server/Vehicles.luau"
+            "Horn": {
+              "$className": "Folder",
+              "HornServer": {
+                "$path": "Source/Services/VehicleService/Components/Horn/Server.luau"
+              }
             }
           },
           "VehicleServiceServer": {
