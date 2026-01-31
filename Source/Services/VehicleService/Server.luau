@@ -13,71 +13,69 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local TextService = game:GetService("TextService")
 
 local Networker = require(ReplicatedStorage.Packages.Networker)
-local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.Utilities.ModelReplicationTools)
+local VehicleTypes = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleTypes)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
-local Components = require(ServerScriptService.Services.VehicleService.Server.Components)
-local ServerVehicleKinds = require(ServerScriptService.Services.VehicleService.Server.Vehicles)
-local VehicleKinds = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Vehicles)
+local HornServer = require(ServerScriptService.Services.VehicleService.Components.Horn.HornServer)
 
 local SpawnedVehicles = workspace.Vehicles
 local Map = workspace.Map
 local Stages = Map.Stages
-
-local cleanup: { [Player]: { (...any) -> () } } = {}
+local Cleanup = {}
 
 -- Types
 export type VehicleServiceServer = typeof(VehicleServiceServer)
 
 -- Internal functions
+function VehicleServiceServer._cleanup(self: VehicleServiceServer, player: Player)
+	for _, fn in Cleanup[player] do
+		fn()
+	end
+end
+
 function VehicleServiceServer._spawn_vehicle_model(
 	self: VehicleServiceServer,
 	player: Player,
 	vehicle_model: Model,
-	position_or_part: Vector3? | BasePart?
+	cframe: CFrame?
 ): Model?
-	local OFFSET_VECTOR = Vector3.new(0, 4, 0)
-	local character = player.Character or player.CharacterAdded:Wait()
-	if not character.PrimaryPart then
-		return nil
-	end
+	-- Get the height of the vehicle model
+	local _, size = vehicle_model:GetBoundingBox()
+	local model_height = size.Y / 2
 
-	local position = character.PrimaryPart.Position + OFFSET_VECTOR
-	if typeof(position_or_part) == "Vector3" then
-		position = position_or_part
-	elseif typeof(position_or_part) == "Instance" and position_or_part:IsA("BasePart") then
-		position = position_or_part.Position
-	end
+	-- Get the CFrame of where the vehicle will be spawned
+	local player_character = player.Character or player.CharacterAdded:Wait()
+	local new_vehicle_cframe = (cframe or player_character.PrimaryPart.CFrame) + Vector3.new(0, model_height, 0)
 
+	-- Create the new vehicle
 	local new_vehicle_model = vehicle_model:Clone()
 	new_vehicle_model.Name = player.Name
 	new_vehicle_model.Parent = SpawnedVehicles
-	new_vehicle_model:MoveTo(position)
 
+	-- Pivot to the decided cframe
+	new_vehicle_model:PivotTo(new_vehicle_cframe)
+
+	-- Set the network owner of the vehicle to the player
+	-- so the player can control the vehicle's physical constraints
 	if new_vehicle_model.PrimaryPart then
 		new_vehicle_model.PrimaryPart:SetNetworkOwner(player)
 	end
 
-	ModelReplicationTools.add_descendants_metadata(new_vehicle_model)
 	return new_vehicle_model
 end
 
 function VehicleServiceServer._force_sit(self: VehicleServiceServer, player: Player, vehicle_model: Model)
-	local scripted = vehicle_model:FindFirstChild("Scripted")
-	if not scripted then
-		warn("Vehicle model is missing Scripted directory!")
-		return
-	end
-	local vehicle_seat = scripted:FindFirstChild("VehicleSeat")
+	-- Get the vehicle's seat
+	local vehicle_seat = vehicle_model.Scripted:FindFirstChildWhichIsA("VehicleSeat")
 	if not vehicle_seat then
 		warn("Vehicle model is missing VehicleSeat!")
 		return
 	end
+
+	-- Get the player's humanoid
 	local character = player.Character or player.CharacterAdded:Wait()
 	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
-	if not humanoid then
-		warn(`Player {player.Name} does not have a valid Humanoid instance!`)
-		return
-	end
+
+	-- Force the player to sit in the vehicle seat
 	if vehicle_seat.Occupant ~= humanoid then
 		vehicle_seat:Sit(humanoid)
 	end
@@ -86,35 +84,51 @@ end
 function VehicleServiceServer._setup_components(
 	self: VehicleServiceServer,
 	player: Player,
-	vehicle_model: Model,
-	equipped_vehicle: string
+	spawned_model: Model,
+	vehicle_name: string
 )
-	local server_vehicle_config = ServerVehicleKinds[equipped_vehicle]
-	if not server_vehicle_config then
+	-- Load vehicle data for vehicle
+	local vehicle_data = VehicleTypes[vehicle_name] :: VehicleTypes.VehicleData
+	if not vehicle_data then
+		warn(`No vehicle data for vehicle with name {vehicle_name}.`)
 		return
 	end
-	local components = server_vehicle_config.components
-	if components.horn then
-		table.insert(cleanup[player], Components.horn(player, vehicle_model, components.horn.sound))
+
+	-- Load relevent components
+	if vehicle_data.components.horn then
+		Cleanup[player][#Cleanup[player] + 1] =
+			HornServer.init(player, spawned_model, vehicle_data.components.horn.sound)
 	end
 end
 
-function VehicleServiceServer._setup_collisions(self: VehicleServiceServer, humanoid: Humanoid, vehicle_model: Model)
-	local body = vehicle_model:FindFirstChild("Body")
-	if not body or not body:IsA("BasePart") then
+function VehicleServiceServer._setup_collisions(self: VehicleServiceServer, spawned_vehicle: Model)
+	-- Get the vehicle's body
+	local body = spawned_vehicle:FindFirstChild("Body")
+	if not body then
+		warn(`{spawned_vehicle} does not have a body.`)
 		return
 	end
-	body.Touched:Connect(function(part: BasePart)
-		local damage = part:GetAttribute("Damage")
-		if not damage then
-			return
-		end
-		humanoid:TakeDamage(damage)
-	end)
-	humanoid.Died:Connect(function()
-		local player = Players:GetPlayerFromCharacter(humanoid.Parent)
-		self:_destroy_vehicle(player, vehicle_model)
-	end)
+
+	-- Create a new vehicle hitbox
+	local hitbox = Instance.new("Part")
+	hitbox.Name = "Hitbox"
+	hitbox.Size = body.Size * 1.1
+	hitbox.CFrame = body.CFrame
+	hitbox.CanCollide = false
+	hitbox.Transparency = 0.5
+	hitbox.Massless = true
+	hitbox.Parent = spawned_vehicle
+
+	-- Weld the hitbox to the vehicle
+	local hitbox_weld = Instance.new("WeldConstraint")
+	hitbox_weld.Part0 = hitbox
+	hitbox_weld.Part1 = spawned_vehicle.PrimaryPart
+	hitbox_weld.Parent = hitbox
+
+	-- Add a hitbox tag
+	hitbox:AddTag("VehicleHitbox")
+
+	return hitbox
 end
 
 function VehicleServiceServer._set_plate(self: VehicleServiceServer, player: Player, vehicle_model: Model, text: string)
@@ -147,20 +161,22 @@ function VehicleServiceServer._customise_color(
 	end
 end
 
-function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer, player: Player, stage: number)
-	if stage == 0 then
-		return
-	end
+function VehicleServiceServer._get_spawn_cframe_for_stage(self: VehicleServiceServer, stage: number)
+	-- Get the stage object
 	local Stage = Stages:FindFirstChild(tostring(stage))
 	if not Stage or not Stage:IsA("Folder") then
 		warn(`Invalid stage {stage}!`)
 		return
 	end
+
+	-- Get the spawns from the stage's folder
 	local Spawns = Stage:FindFirstChild("Spawns")
 	if not Spawns or not Spawns:IsA("Folder") then
 		warn(`Stage {stage} does not contain a Spawns directory!`)
 		return
 	end
+
+	-- Select a random, non-occupied spawn (fallback to a random one)
 	local spawns = Spawns:GetChildren()
 	local selected_spawn: BasePart = spawns[math.random(1, #spawns)]
 	local overlap_params = OverlapParams.new()
@@ -177,95 +193,103 @@ function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer
 		end
 		selected_spawn = spawn
 	end
-	self:_spawn_vehicle(player, selected_spawn.Position)
+
+	return selected_spawn.CFrame
+end
+
+function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer, player: Player, stage: number)
+	-- Player should not have a vehicle at stage 0 (the intro)
+	if stage == 0 then
+		return
+	end
+
+	-- Get a free position to spawn the vehicle at
+	local selected_spawn_cframe = self:_get_spawn_cframe_for_stage(stage)
+
+	-- Spawn at the selected spawn's CFrame
+	self:_spawn_vehicle(player, selected_spawn_cframe)
 end
 
 function VehicleServiceServer._destroy_vehicle(self: VehicleServiceServer, player: Player, vehicle_model: Model?)
+	-- Get the vehicle model if not provided to the function
 	vehicle_model = vehicle_model or SpawnedVehicles:FindFirstChild(player.Name)
 	if not vehicle_model or not vehicle_model:IsA("Model") then
 		return
 	end
-	local body = vehicle_model:FindFirstChild("Body")
-	if not body or not body:IsA("BasePart") then
-		return
-	end
-	local explosion = Instance.new("Explosion")
-	explosion.Visible = false
-	explosion.ExplosionType = Enum.ExplosionType.NoCraters
-	explosion.TimeScale = 1.5
-	explosion.BlastRadius = 8
-	explosion.BlastPressure = 10
-	explosion.DestroyJointRadiusPercent = 0
-	explosion.Position = body.Position
-	explosion.Parent = body
-	explosion.Visible = true
-	task.delay(2, explosion.Destroy, explosion)
-	for _, weld in vehicle_model:QueryDescendants("WeldConstraint") do
-		weld:Destroy()
-	end
-	task.delay(3, vehicle_model.Destroy, vehicle_model)
+
+	-- Destroy the vehicle and call cleanup functions
+	vehicle_model:Destroy()
 	self.networker:fire(player, "cleanup")
 	self:_cleanup(player)
-end
-
-function VehicleServiceServer._cleanup(self: VehicleServiceServer, player: Player)
-	for _, fn in cleanup[player] do
-		fn()
-	end
 end
 
 function VehicleServiceServer._spawn_vehicle(
 	self: VehicleServiceServer,
 	player: Player,
-	position: Vector3?,
+	cframe: CFrame,
 	vehicle: string?
-) -- VehicleOverride is optional
+)
 	-- Grab currently equipped vehicle
 	local equipped_vehicle = vehicle or DataServiceServer:get_value(player, { "equipped_vehicle" })
-	if not equipped_vehicle then
-		return
-	end
+
+	-- If there is already a vehicle spawned by the player, destroy it
 	local spawned_vehicle = SpawnedVehicles:FindFirstChild(player.Name)
 	if spawned_vehicle and spawned_vehicle:IsA("Model") then
 		self:_destroy_vehicle(player, spawned_vehicle)
 	end
+
 	-- Get vehicle-specific data
-	local vehicle_data = VehicleKinds[equipped_vehicle]
+	local vehicle_data = VehicleTypes[equipped_vehicle] :: VehicleTypes.VehicleData
 	if not vehicle_data then
-		error(`Vehicle module for vehicle {equipped_vehicle} does not exist.`)
+		error(`Vehicle data for vehicle {equipped_vehicle} does not exist.`)
 	end
-	-- Process vehicle-specific data
-	local vehicle_model = vehicle_data.vehicle_model
-	local vehicle_config = vehicle_data.vehicle_config
+
+	-- Get vehicle model from vehicle data
+	local vehicle_model = vehicle_data.data.vehicle_model
+
 	-- Spawn new vehicle
-	local new_vehicle, reason = self:_spawn_vehicle_model(player, vehicle_model, position)
+	local new_vehicle, reason = self:_spawn_vehicle_model(player, vehicle_model, cframe)
 	if not new_vehicle then
 		error(`Unable to spawn vehicle for {player.Name} - {reason}`)
 		return
 	end
+
+	-- Set the player's license plate
 	local plate = DataServiceServer:get_value(player, { "plate" })
 	if plate ~= nil then
 		self:_set_plate(player, new_vehicle, plate)
 	end
+
+	-- Set the player's vehicle color
 	local vehicles = DataServiceServer:get_value(player, { "vehicles" })
 	local color_data: { r: number, g: number, b: number }? = vehicles[equipped_vehicle].color
 	if color_data then
 		self:_customise_color(player, new_vehicle, Color3.fromRGB(color_data.r, color_data.g, color_data.b))
 	end
 
+	-- Grab the player's humanoid
 	local character = player.Character or player.CharacterAdded:Wait()
 	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
 	if not humanoid then
 		return
 	end
-	humanoid.MaxHealth = vehicle_config.health
-	humanoid.Health = vehicle_config.health
 
+	-- Set the player's humanoid to the configured vehicle health
+	humanoid.MaxHealth = vehicle_data.data.health
+	humanoid.Health = vehicle_data.data.health
+
+	-- Detect when the player dies and clean up their vehicle
+	humanoid.Died:Connect(function()
+		self:_destroy_vehicle(player, new_vehicle)
+	end)
+
+	-- Initialize the vehicle
 	self:_setup_components(player, new_vehicle, equipped_vehicle)
-	self:_setup_collisions(humanoid, new_vehicle)
+	self:_setup_collisions(new_vehicle)
 	self:_force_sit(player, new_vehicle)
 
-	self.networker:fire(player, "setup_vehicle", equipped_vehicle, new_vehicle, vehicle_config)
+	-- Notify the player
+	self.networker:fire(player, "setup_vehicle", equipped_vehicle, new_vehicle)
 end
 
 -- Public functions
@@ -355,7 +379,7 @@ function VehicleServiceServer.request_equip_vehicle(
 	end
 	DataServiceServer:set_value(player, { "equipped_vehicle" }, vehicle_name)
 	if SpawnedVehicles:FindFirstChild(player.Name) then
-		self:reset_vehicle(player)
+		self:reset_vehicle(player, true)
 		return SUCCESS_MESSAGE
 	end
 	local stage = DataServiceServer:get_value(player, { "stage" })
@@ -363,17 +387,28 @@ function VehicleServiceServer.request_equip_vehicle(
 	return SUCCESS_MESSAGE
 end
 
-function VehicleServiceServer.reset_vehicle(self: VehicleServiceServer, player: Player)
+function VehicleServiceServer.reset_vehicle(self: VehicleServiceServer, player: Player, hard_reset: boolean)
+	-- Get the player's vehicle model
 	local vehicle_model = SpawnedVehicles:FindFirstChild(player.Name)
 	if not vehicle_model or not vehicle_model:IsA("Model") then
 		return
 	end
+
+	-- Get the player's current stage
 	local stage = DataServiceServer:get_value(player, { "stage" })
-	self:_destroy_vehicle(player, vehicle_model)
-	player.CharacterAdded:Once(function()
+
+	-- Completely regenerate the vehicle if hard_reset is true
+	-- Else teleport back to the start of the stage
+	if hard_reset == true then
+		self:_destroy_vehicle(player, vehicle_model)
+		player:LoadCharacterAsync()
 		self:_spawn_vehicle_at_stage(player, stage)
-	end)
-	player:LoadCharacterAsync()
+	else
+		local _, vehicle_size = vehicle_model:GetBoundingBox()
+		local spawn_offset = vehicle_size.Y / 2
+		local free_spawn_cframe = self:_get_spawn_cframe_for_stage(stage)
+		vehicle_model:PivotTo(free_spawn_cframe + Vector3.new(0, spawn_offset, 0))
+	end
 end
 
 function VehicleServiceServer.init(self: VehicleServiceServer)
@@ -385,10 +420,10 @@ function VehicleServiceServer.init(self: VehicleServiceServer)
 	})
 
 	local function player_added(player: Player)
-		cleanup[player] = {}
+		Cleanup[player] = {}
 		local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
 		local stage = DataServiceServer:get_value(player, { "stage" })
-		if VehicleKinds[equipped_vehicle] ~= nil then
+		if VehicleTypes[equipped_vehicle] ~= nil then
 			self:_spawn_vehicle_at_stage(player, stage)
 		end
 	end
@@ -399,7 +434,8 @@ function VehicleServiceServer.init(self: VehicleServiceServer)
 		if vehicle_model then
 			self:_destroy_vehicle(player, vehicle_model)
 		end
-		cleanup[player] = nil
+		self:_cleanup(player)
+		Cleanup[player] = nil
 	end)
 
 	-- Vehicle spawning logic
