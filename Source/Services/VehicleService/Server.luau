@@ -13,13 +13,12 @@ local ServerScriptService = game:GetService("ServerScriptService")
 local TextService = game:GetService("TextService")
 
 local Networker = require(ReplicatedStorage.Packages.Networker)
+local VehicleServiceUtils = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceUtils)
 local VehicleTypes = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleTypes)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
 local HornServer = require(ServerScriptService.Services.VehicleService.Components.Horn.HornServer)
 
 local SpawnedVehicles = workspace.Vehicles
-local Map = workspace.Map
-local Stages = Map.Stages
 local Cleanup = {}
 
 -- Types
@@ -161,42 +160,6 @@ function VehicleServiceServer._customise_color(
 	end
 end
 
-function VehicleServiceServer._get_spawn_cframe_for_stage(self: VehicleServiceServer, stage: number)
-	-- Get the stage object
-	local Stage = Stages:FindFirstChild(tostring(stage))
-	if not Stage or not Stage:IsA("Folder") then
-		warn(`Invalid stage {stage}!`)
-		return
-	end
-
-	-- Get the spawns from the stage's folder
-	local Spawns = Stage:FindFirstChild("Spawns")
-	if not Spawns or not Spawns:IsA("Folder") then
-		warn(`Stage {stage} does not contain a Spawns directory!`)
-		return
-	end
-
-	-- Select a random, non-occupied spawn (fallback to a random one)
-	local spawns = Spawns:GetChildren()
-	local selected_spawn: BasePart = spawns[math.random(1, #spawns)]
-	local overlap_params = OverlapParams.new()
-	overlap_params.FilterType = Enum.RaycastFilterType.Include
-	overlap_params.MaxParts = 1
-	for _, spawn in spawns do
-		if not spawn:IsA("BasePart") then
-			continue
-		end
-		overlap_params.FilterDescendantsInstances = SpawnedVehicles:GetChildren()
-		local part_bounds_in_box = workspace:GetPartBoundsInBox(spawn.CFrame, spawn.Size, overlap_params)
-		if #part_bounds_in_box > 0 then
-			continue
-		end
-		selected_spawn = spawn
-	end
-
-	return selected_spawn.CFrame
-end
-
 function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer, player: Player, stage: number)
 	-- Player should not have a vehicle at stage 0 (the intro)
 	if stage == 0 then
@@ -204,7 +167,7 @@ function VehicleServiceServer._spawn_vehicle_at_stage(self: VehicleServiceServer
 	end
 
 	-- Get a free position to spawn the vehicle at
-	local selected_spawn_cframe = self:_get_spawn_cframe_for_stage(stage)
+	local selected_spawn_cframe = VehicleServiceUtils:get_spawn_cframe_for_stage(stage)
 
 	-- Spawn at the selected spawn's CFrame
 	self:_spawn_vehicle(player, selected_spawn_cframe)

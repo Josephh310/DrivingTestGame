@@ -9,8 +9,10 @@ local VehicleServiceClient = {}
 -- Dependencies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local VehicleServiceUtils = require(script.Parent.VehicleServiceUtils)
 local VehicleTypes = require(script.Parent.VehicleTypes)
 local Networker = require(ReplicatedStorage.Packages.Networker)
+local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
 local EngineClient = require(ReplicatedStorage.Shared.Services.VehicleService.Components.Engine.EngineClient)
 local HornClient = require(ReplicatedStorage.Shared.Services.VehicleService.Components.Horn.HornClient)
 
@@ -60,6 +62,16 @@ function VehicleServiceClient._setup_components(self: VehicleServiceClient, vehi
 				vehicle_platform.AttachmentFR,
 			}, vehicle_data.components.engine.max_steer_angle)
 	end
+end
+
+function VehicleServiceClient.reset_vehicle_position(self: VehicleServiceClient)
+	local vehicle = VehicleServiceUtils:get_vehicle_from_player(Player) :: Model
+	if not vehicle then
+		return
+	end
+	local current_stage = DataServiceClient:get_data().stage
+	local new_cframe = VehicleServiceUtils:get_spawn_cframe_for_stage(current_stage)
+	vehicle:PivotTo(new_cframe)
 end
 
 function VehicleServiceClient.setup_vehicle(self: VehicleServiceClient, vehicle_name: string, spawned_model: Model)

@@ -11,7 +11,7 @@ local ActionButtonsFrame = Interface.HUD.ActionButtons
 
 --Functions
 function ActionButtons._reset_vehicle_clicked()
-	VehicleServiceClient.networker:fire("reset_vehicle")
+	VehicleServiceClient:reset_vehicle_position()
 end
 
 function ActionButtons._troll_clicked()

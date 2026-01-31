@@ -96,6 +96,9 @@
                 }
               }
             },
+            "VehicleServiceUtils": {
+              "$path": "Source/Services/VehicleService/Utils.luau"
+            },
             "VehicleTypes": {
               "$path": "Source/Services/VehicleService/VehicleTypes.luau"
             }

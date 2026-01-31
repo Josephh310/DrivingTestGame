@@ -32,7 +32,7 @@ DataServiceShared.template = {
 	skips = 0,
 	badges = {},
 	vehicles = { ["hatchback"] = {} },
-	equipped_vehicle = "",
+	equipped_vehicle = "hatchback",
 	products_owned = {},
 	purchase_history = {},
 } :: PlayerData
