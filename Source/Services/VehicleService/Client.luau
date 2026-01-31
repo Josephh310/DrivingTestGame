@@ -4,52 +4,32 @@
 	@Description: Handles the vehicle system on the client
 ]]
 
+local VehicleServiceClient = {}
+
 -- Dependencies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
-local Components = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Components)
-local VehicleKinds = require(ReplicatedStorage.Shared.Services.VehicleService.Shared.Vehicles)
+local VehicleTypes = require(script.Parent.VehicleTypes)
 local Networker = require(ReplicatedStorage.Packages.Networker)
-local ModelReplicationTools = require(ReplicatedStorage.Shared.Modules.Utilities.ModelReplicationTools)
+local EngineClient = require(ReplicatedStorage.Shared.Services.VehicleService.Components.Engine.EngineClient)
+local HornClient = require(ReplicatedStorage.Shared.Services.VehicleService.Components.Horn.HornClient)
 
-local player = Players.LocalPlayer
-
-local VehicleServiceClient = {}
-
-local cleanup: { [number]: (...any) -> () } = {}
+-- Variables
+local Player = Players.LocalPlayer
+local Cleanup = {}
 
 -- Types
 type VehicleServiceClient = typeof(VehicleServiceClient)
-type VehicleConfig = VehicleKinds.VehicleConfig
 
 -- Public functions
-function VehicleServiceClient.init(self: VehicleServiceClient)
-	self.networker = Networker.client.new("VehicleService", self)
-end
-
-function VehicleServiceClient._setup_components(self: VehicleServiceClient)
-	local components = self.vehicle_config.components
-	if components.horn then
-		table.insert(cleanup, Components.horn())
-	end
-	if components.engine then
-		local chassis = self.scripted.Chassis
-		local platform = chassis.Platform
-		local constraints = self.scripted.Constraints
-		table.insert(
-			cleanup,
-			Components.engine(
-				self.vehicle_seat,
-				constraints:GetChildren(),
-				{ platform.AttachmentFL, platform.AttachmentFR },
-				components.engine.max_steer_angle
-			)
-		)
+function VehicleServiceClient.cleanup()
+	for _, fn in Cleanup do
+		fn()
 	end
 end
 
 function VehicleServiceClient._force_sit(self: VehicleServiceClient)
-	local character = player.Character or player.CharacterAdded:Wait()
+	local character = Player.Character or Player.CharacterAdded:Wait()
 	local humanoid = character:FindFirstChildWhichIsA("Humanoid")
 	humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, false)
 	return function()
@@ -57,35 +37,48 @@ function VehicleServiceClient._force_sit(self: VehicleServiceClient)
 	end
 end
 
-function VehicleServiceClient.setup_vehicle(
-	self: VehicleServiceClient,
-	vehicle_name: string,
-	vehicle_model: Model,
-	vehicle_config: VehicleConfig
-)
-	self.vehicle_model = vehicle_model
-	self.vehicle_config = vehicle_config
-	self.vehicle_name = vehicle_name
-	ModelReplicationTools.wait_for_descendants(self.vehicle_model, 5)
-	self.scripted = self.vehicle_model.Scripted :: Model
-	self.vehicle_seat = self.scripted.VehicleSeat :: VehicleSeat
+function VehicleServiceClient._setup_components(self: VehicleServiceClient, vehicle_name: string, spawned_model: Model)
+	-- Fetch the vehicle configuration from VehicleTypes
+	local vehicle_data = VehicleTypes[vehicle_name] :: VehicleTypes.VehicleData
+	if not vehicle_data then
+		warn(`No vehicle data exists for vehicle with name {vehicle_name}.`)
+		return
+	end
 
-	table.insert(cleanup, self:_force_sit())
-	self:_setup_components()
-end
+	-- Load relevent components
+	if vehicle_data.components.horn then
+		Cleanup[#Cleanup + 1] = HornClient.init()
+	end
 
-function VehicleServiceClient.cleanup()
-	for _, fn in cleanup do
-		fn()
+	if vehicle_data.components.engine then
+		local vehicle_constraints = spawned_model.Scripted.Constraints
+		local vehicle_chassis = spawned_model.Scripted.Chassis
+		local vehicle_platform = vehicle_chassis.Platform
+		Cleanup[#Cleanup + 1] =
+			EngineClient.init(spawned_model.Scripted.VehicleSeat, vehicle_constraints:GetChildren(), {
+				vehicle_platform.AttachmentFL,
+				vehicle_platform.AttachmentFR,
+			}, vehicle_data.components.engine.max_steer_angle)
 	end
 end
 
-function VehicleServiceClient.reset_vehicle(self: VehicleServiceClient)
-	self.networker:fire("reset_vehicle")
+function VehicleServiceClient.setup_vehicle(self: VehicleServiceClient, vehicle_name: string, spawned_model: Model)
+	-- Wait for the model to fully replicate
+	if not spawned_model.PrimaryPart then
+		spawned_model:GetAttributeChangedSignal("PrimaryPart"):Wait()
+	end
+
+	-- Sit the player and disable jumping
+	-- Returns a function to allow the player to jump again, add to cleanup to call it when a player's vehicle is removed
+	local jump_again = self:_force_sit()
+	Cleanup[#Cleanup + 1] = jump_again
+
+	-- Set up the component
+	self:_setup_components(vehicle_name, spawned_model)
 end
 
-function VehicleServiceClient.equip_vehicle(self: VehicleServiceClient, vehicle_name: string): string
-	return self.networker:fetch("request_equip_vehicle", vehicle_name)
+function VehicleServiceClient.init(self: VehicleServiceClient)
+	self.networker = Networker.client.new("VehicleService", self)
 end
 
 return VehicleServiceClient
