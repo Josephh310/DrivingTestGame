@@ -116,8 +116,8 @@
               "CheckpointHitbox": {
                 "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
               },
-              "RegionIndicator": {
-                "$path": "Source/Modules/Components/Client/RegionIndicator.luau"
+              "ParkingSpace": {
+                "$path": "Source/Modules/Components/Client/ParkingSpace.luau"
               }
             }
           },
