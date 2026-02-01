@@ -7,6 +7,7 @@ local ColorCustomise = {
 -- Dependencies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local HSVColorWheel = require(ReplicatedStorage.Shared.Modules.Utilities.HSVColorWheel)
+local VehicleServiceClient = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceClient)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
 -- Constants
@@ -23,7 +24,10 @@ function ColorCustomise.hide()
 	ColorCustomiseFrame.Visible = false
 end
 
-function ColorCustomise.show()
+function ColorCustomise.show(vehicle_name: string)
+	if vehicle_name then
+		ColorCustomise.vehicle = vehicle_name
+	end
 	ColorCustomiseFrame.Visible = true
 end
 
@@ -50,6 +54,14 @@ function ColorCustomise._limit_color_selector(current_position: UDim2)
 		return current_position
 	else
 		return ColorCustomise.last_position
+	end
+end
+
+function ColorCustomise._confirm_clicked()
+	local color = ColorCustomiseFrame.SelectedColour.BackgroundColor3
+	if ColorCustomise.vehicle then
+		VehicleServiceClient.networker:fire("request_customise_color", ColorCustomise.vehicle, color)
+		ColorCustomise._close_button_clicked()
 	end
 end
 
@@ -94,6 +106,7 @@ function ColorCustomise.init()
 
 	-- Button connections
 	FrameCloseButton.MouseButton1Click:Connect(ColorCustomise._close_button_clicked)
+	ColorCustomiseFrame.Confirm.MouseButton1Click:Connect(ColorCustomise._confirm_clicked)
 end
 
 return ColorCustomise
