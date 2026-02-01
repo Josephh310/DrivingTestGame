@@ -115,6 +115,9 @@
               "$className": "Folder",
               "CheckpointHitbox": {
                 "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
+              },
+              "ParkingSpace": {
+                "$path": "Source/Modules/Components/Client/ParkingSpace.luau"
               }
             }
           },

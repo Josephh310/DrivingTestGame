@@ -22,6 +22,13 @@ return function(hitbox: BasePart)
 		end
 		-- Set to the next stage
 		DataServiceServer:set_value(player, { "current_stage" }, stage_number + 1)
+		DataServiceServer:apply_change(player, { "best_stage" }, function(current_value: number)
+			if current_value < stage_number + 1 then
+				return stage_number + 1
+			else
+				return current_value
+			end
+		end)
 	end)
 	return function()
 		touched_connection:Disconnect()
