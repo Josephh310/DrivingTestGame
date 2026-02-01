@@ -11,7 +11,8 @@
 local DataServiceShared = {}
 
 export type PlayerData = {
-	stage: number,
+	current_stage: number,
+	best_stage: number,
 	skips: number,
 	badges: { number },
 	vehicles: Vehicles,
@@ -28,17 +29,18 @@ export type Vehicles = {
 }
 
 DataServiceShared.template = {
-	stage = 1,
+	current_stage = 1,
+	best_stage = 1,
 	skips = 0,
 	badges = {},
 	vehicles = { ["hatchback"] = {}, ["suv"] = {}, ["sports_racer"] = {}, ["convertable"] = {} }, -- for debugging
 	equipped_vehicle = "hatchback",
 	products_owned = {},
-	purchase_history = {},
 } :: PlayerData
 
 DataServiceShared.leaderstats = {
-	stage = "Stage",
+	current_stage = "Stage",
+	best_stage = "Best Stage",
 }
 
 DataServiceShared.flags = {
