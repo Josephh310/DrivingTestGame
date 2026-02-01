@@ -115,6 +115,9 @@
               "$className": "Folder",
               "CheckpointHitbox": {
                 "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
+              },
+              "RegionIndicator": {
+                "$path": "Source/Modules/Components/Client/RegionIndicator.luau"
               }
             }
           },
