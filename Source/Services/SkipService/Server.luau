@@ -66,9 +66,16 @@ function SkipServiceServer.use_skip(self: SkipServiceServer, player: Player)
 			return current_skips
 		end
 
-		-- The player has skips, consume one and increment their stage
-		DataServiceServer:apply_change(player, { "stage" }, function(current_stage: number)
-			return current_stage + 1
+		-- The player has skips, consume one and increment their best stage
+		DataServiceServer:apply_change(player, { "best_stage" }, function(current_best: number)
+			-- Increment best stage
+			local new_stage = current_best + 1
+
+			-- Set the player's current stage to the new best stage
+			DataServiceServer:set_value(player, { "current_stage" }, new_stage)
+
+			-- Return the new best stage
+			return new_stage
 		end)
 
 		-- Tell the client to teleport the vehicle
