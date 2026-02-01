@@ -4,8 +4,10 @@ local SkipServiceServer = {}
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local Networker = require(ReplicatedStorage.Packages.Networker)
 local SkipServiceShared = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceShared)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
+local VehicleServiceServer = require(ServerScriptService.Services.VehicleService.VehicleServiceServer)
 
 -- Types
 export type SkipServiceServer = typeof(SkipServiceServer)
@@ -56,6 +58,11 @@ function SkipServiceServer.give_skip(self: SkipServiceServer, player: Player)
 end
 
 function SkipServiceServer.init(self: SkipServiceServer)
+	-- Expose use_skip to the client
+	self.networker = Networker.server.new("SkipService", self, {
+		self.use_skip,
+	})
+
 	-- Registed players already in the game
 	for index, player in Players:GetPlayers() do
 		task.defer(function()
