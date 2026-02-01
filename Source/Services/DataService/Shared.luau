@@ -31,7 +31,7 @@ DataServiceShared.template = {
 	stage = 1,
 	skips = 0,
 	badges = {},
-	vehicles = { ["hatchback"] = {} },
+	vehicles = { ["hatchback"] = {}, ["suv"] = {}, ["sports_racer"] = {}, ["convertable"] = {} }, -- for debugging
 	equipped_vehicle = "hatchback",
 	products_owned = {},
 	purchase_history = {},
