@@ -345,7 +345,7 @@ function VehicleServiceServer.request_equip_vehicle(
 		self:reset_vehicle(player, true)
 		return SUCCESS_MESSAGE
 	end
-	local stage = DataServiceServer:get_value(player, { "stage" })
+	local stage = DataServiceServer:get_value(player, { "current_stage" })
 	self:_spawn_vehicle_at_stage(player, stage)
 	return SUCCESS_MESSAGE
 end
@@ -358,7 +358,7 @@ function VehicleServiceServer.reset_vehicle(self: VehicleServiceServer, player: 
 	end
 
 	-- Get the player's current stage
-	local stage = DataServiceServer:get_value(player, { "stage" })
+	local stage = DataServiceServer:get_value(player, { "current_stage" })
 
 	-- Completely regenerate the vehicle if hard_reset is true
 	-- Else teleport back to the start of the stage
@@ -385,7 +385,7 @@ function VehicleServiceServer.init(self: VehicleServiceServer)
 	local function player_added(player: Player)
 		Cleanup[player] = {}
 		local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
-		local stage = DataServiceServer:get_value(player, { "stage" })
+		local stage = DataServiceServer:get_value(player, { "current_stage" })
 		if VehicleTypes[equipped_vehicle] ~= nil then
 			self:_spawn_vehicle_at_stage(player, stage)
 		end

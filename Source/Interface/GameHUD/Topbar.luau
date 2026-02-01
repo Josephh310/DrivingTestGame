@@ -48,6 +48,7 @@ function Topbar.init()
 	TopbarFrame.Next.MouseButton1Click:Connect(Topbar._next_stage_clicked)
 	TopbarFrame.Previous.MouseButton1Click:Connect(Topbar._previous_stage_clicked)
 	TopbarFrame.SkipAll.MouseButton1Click:Connect(Topbar._skip_all_clicked)
+	DataServiceClient.connect_to_value_changed({ "current_stage" }, Topbar._update_current_stage)
 end
 
 return Topbar
