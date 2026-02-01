@@ -1,7 +1,11 @@
 local Topbar = {}
 
 -- Dependencies
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TweenService = game:GetService("TweenService")
+local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
+local MarketplaceServiceClient = require(ReplicatedStorage.Shared.Services.MarketplaceService.MarketplaceServiceClient)
+local SkipServiceClient = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceClient)
 local InterfaceUtils = require(script.Parent.Parent.Utilities)
 
 -- Constants
@@ -25,15 +29,15 @@ function Topbar._update_current_stage(new_value: number)
 end
 
 function Topbar._next_stage_clicked()
-	print("Next stage clicked")
+	SkipServiceClient.networker:fire("go_forewards")
 end
 
 function Topbar._previous_stage_clicked()
-	print("Previous stage clicked")
+	SkipServiceClient.networker:fire("go_backwards")
 end
 
 function Topbar._skip_all_clicked()
-	print("Skip all clicked")
+	MarketplaceServiceClient:purchase_product("skip_to_end")
 end
 
 function Topbar.hide()
@@ -48,6 +52,7 @@ function Topbar.init()
 	TopbarFrame.Next.MouseButton1Click:Connect(Topbar._next_stage_clicked)
 	TopbarFrame.Previous.MouseButton1Click:Connect(Topbar._previous_stage_clicked)
 	TopbarFrame.SkipAll.MouseButton1Click:Connect(Topbar._skip_all_clicked)
+	DataServiceClient.connect_to_value_changed({ "current_stage" }, Topbar._update_current_stage)
 end
 
 return Topbar

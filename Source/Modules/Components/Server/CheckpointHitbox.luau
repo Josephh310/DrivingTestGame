@@ -21,7 +21,7 @@ return function(hitbox: BasePart)
 			return
 		end
 		-- Set to the next stage
-		DataServiceServer:set_value(player, { "stage" }, stage_number + 1)
+		DataServiceServer:set_value(player, { "current_stage" }, stage_number + 1)
 	end)
 	return function()
 		touched_connection:Disconnect()

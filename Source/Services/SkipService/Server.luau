@@ -66,9 +66,16 @@ function SkipServiceServer.use_skip(self: SkipServiceServer, player: Player)
 			return current_skips
 		end
 
-		-- The player has skips, consume one and increment their stage
-		DataServiceServer:apply_change(player, { "stage" }, function(current_stage: number)
-			return current_stage + 1
+		-- The player has skips, consume one and increment their best stage
+		DataServiceServer:apply_change(player, { "best_stage" }, function(current_best: number)
+			-- Increment best stage
+			local new_stage = current_best + 1
+
+			-- Set the player's current stage to the new best stage
+			DataServiceServer:set_value(player, { "current_stage" }, new_stage)
+
+			-- Return the new best stage
+			return new_stage
 		end)
 
 		-- Tell the client to teleport the vehicle
@@ -79,10 +86,42 @@ function SkipServiceServer.use_skip(self: SkipServiceServer, player: Player)
 	end)
 end
 
+function SkipServiceServer.go_forewards(self: SkipServiceServer, player: Player)
+	local changed = false
+	DataServiceServer:apply_change(player, { "current_stage" }, function(current_value: number)
+		local next_stage = current_value + 1
+		local best_stage = DataServiceServer:get_value(player, { "best_stage" })
+		if next_stage > best_stage then
+			return current_value
+		end
+		changed = true
+		return next_stage
+	end)
+	if changed then
+		VehicleServiceServer.networker:fire(player, "reset_vehicle_position")
+	end
+end
+
+function SkipServiceServer.go_backwards(self: SkipServiceServer, player: Player)
+	local changed = false
+	DataServiceServer:apply_change(player, { "current_stage" }, function(current_value: number)
+		if current_value <= 1 then
+			return current_value
+		end
+		changed = true
+		return current_value - 1
+	end)
+	if changed then
+		VehicleServiceServer.networker:fire(player, "reset_vehicle_position")
+	end
+end
+
 function SkipServiceServer.init(self: SkipServiceServer)
 	-- Expose use_skip to the client
 	self.networker = Networker.server.new("SkipService", self, {
 		self.use_skip,
+		self.go_forewards,
+		self.go_backwards,
 	})
 
 	-- Registed players already in the game

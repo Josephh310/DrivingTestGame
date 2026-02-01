@@ -3,7 +3,9 @@ local SkipServiceClient = {}
 -- Dependencies
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local InterfaceUtilities = require(ReplicatedStorage.Interface.Utilities)
 local Networker = require(ReplicatedStorage.Packages.Networker)
+local DataServiceClient = require(ReplicatedStorage.Shared.Services.DataService.DataServiceClient)
 local SkipServiceShared = require(script.Parent.SkipServiceShared)
 
 -- Constants
@@ -39,6 +41,18 @@ function SkipServiceClient.listen_to_timer(self: SkipServiceClient, callback: (T
 	-- Return a function to disconnect the listener
 	return function()
 		timer_connections[callback_index] = nil
+	end
+end
+
+function SkipServiceClient.prompt_skip_purchase(self: SkipServiceClient)
+	InterfaceUtilities.toggle_screen("GameShop", 1)
+end
+
+function SkipServiceClient.use_skip(self: SkipServiceClient)
+	if DataServiceClient:get_data().skips > 0 then
+		SkipServiceClient.networker:fire("use_skip")
+	else
+		self:prompt_skip_purchase()
 	end
 end
 

@@ -21,11 +21,11 @@ function GridButtons._inventory_button_clicked()
 end
 
 function GridButtons._buy_skips_clicked()
-	InterfaceUtilities.toggle_screen("GameShop", 1)
+	SkipServiceClient:prompt_skip_purchase()
 end
 
 function GridButtons._use_skips_clicked()
-	SkipServiceClient.networker:fire("use_skip")
+	SkipServiceClient:use_skip()
 end
 
 function GridButtons._update_skip_timer(time_in_seconds: number)
