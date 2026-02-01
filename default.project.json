@@ -116,6 +116,9 @@
               "CheckpointHitbox": {
                 "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
               },
+              "Destructable": {
+                "$path": "Source/Modules/Components/Client/Destructable.luau"
+              },
               "ParkingSpace": {
                 "$path": "Source/Modules/Components/Client/ParkingSpace.luau"
               }
