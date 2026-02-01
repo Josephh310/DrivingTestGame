@@ -25,7 +25,7 @@ function GridButtons._buy_skips_clicked()
 end
 
 function GridButtons._use_skips_clicked()
-	print("Use skips clicked")
+	SkipServiceClient.networker:fire("use_skip")
 end
 
 function GridButtons._update_skip_timer(time_in_seconds: number)
