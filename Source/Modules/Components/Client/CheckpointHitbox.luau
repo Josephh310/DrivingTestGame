@@ -2,12 +2,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Observers = require(ReplicatedStorage.Packages.Observers)
 
 return function(hitbox: BasePart)
+	-- Cleanup
+	local observers = {}
+
 	-- Reconcile attributes
 	if not hitbox:GetAttribute("is_open") then
 		hitbox:SetAttribute("is_open", false)
 	end
 	-- Observe is_open, changes based on obby objectives
-	local stop_observing = Observers.observeAttribute(hitbox, "is_open", function()
+	observers[#observers + 1] = Observers.observeAttribute(hitbox, "is_open", function()
 		local is_open = hitbox:GetAttribute("is_open")
 		if is_open then
 			hitbox.CanCollide = false
@@ -19,5 +22,37 @@ return function(hitbox: BasePart)
 			hitbox.Transparency = 0.1
 		end
 	end)
-	return stop_observing
+
+	local unlock_criteria = hitbox:FindFirstChild("UnlockCriteria")
+	if unlock_criteria and unlock_criteria:IsA("Configuration") then
+		local values_registered = 0
+		local values_true = 0
+		for index, object_value in unlock_criteria:GetChildren() do
+			if not object_value:IsA("ObjectValue") then
+				continue
+			end
+			local boolean_value = object_value.Value
+			if not boolean_value:IsA("BoolValue") then
+				continue
+			end
+			values_registered += 1
+			observers[#observers + 1] = Observers.observeProperty(boolean_value, "Value", function(value: boolean)
+				if value == true then
+					values_true += 1
+				else
+					values_true -= 1
+				end
+				if values_true == 0 then
+					hitbox:SetAttribute("is_open", true)
+				else
+					hitbox:SetAttribute("is_open", false)
+				end
+			end)
+		end
+	end
+	return function()
+		for index, stop_observing in observers do
+			stop_observing()
+		end
+	end
 end
