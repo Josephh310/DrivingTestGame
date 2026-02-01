@@ -4,8 +4,10 @@ local SkipServiceServer = {}
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
+local Networker = require(ReplicatedStorage.Packages.Networker)
 local SkipServiceShared = require(ReplicatedStorage.Shared.Services.SkipService.SkipServiceShared)
 local DataServiceServer = require(ServerScriptService.Services.DataService.DataServiceServer)
+local VehicleServiceServer = require(ServerScriptService.Services.VehicleService.VehicleServiceServer)
 
 -- Types
 export type SkipServiceServer = typeof(SkipServiceServer)
@@ -55,7 +57,34 @@ function SkipServiceServer.give_skip(self: SkipServiceServer, player: Player)
 	end)
 end
 
+function SkipServiceServer.use_skip(self: SkipServiceServer, player: Player)
+	-- Take a skip from the player
+	DataServiceServer:apply_change(player, { "skips" }, function(current_skips: number)
+		-- Check if the player has skips
+		-- If not, reject and keep the number of skips the same
+		if current_skips <= 0 then
+			return current_skips
+		end
+
+		-- The player has skips, consume one and increment their stage
+		DataServiceServer:apply_change(player, { "stage" }, function(current_stage: number)
+			return current_stage + 1
+		end)
+
+		-- Tell the client to teleport the vehicle
+		VehicleServiceServer.networker:fire(player, "reset_vehicle_position")
+
+		-- Decrement the number of skips the player has
+		return current_skips - 1
+	end)
+end
+
 function SkipServiceServer.init(self: SkipServiceServer)
+	-- Expose use_skip to the client
+	self.networker = Networker.server.new("SkipService", self, {
+		self.use_skip,
+	})
+
 	-- Registed players already in the game
 	for index, player in Players:GetPlayers() do
 		task.defer(function()

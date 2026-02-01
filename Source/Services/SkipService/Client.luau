@@ -2,6 +2,8 @@ local SkipServiceClient = {}
 
 -- Dependencies
 local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Networker = require(ReplicatedStorage.Packages.Networker)
 local SkipServiceShared = require(script.Parent.SkipServiceShared)
 
 -- Constants
@@ -41,6 +43,9 @@ function SkipServiceClient.listen_to_timer(self: SkipServiceClient, callback: (T
 end
 
 function SkipServiceClient.init(self: SkipServiceClient)
+	-- Init client networker
+	self.networker = Networker.client.new("SkipService", self)
+
 	-- Subscribe to SkipTimer replication from the server
 	player:GetAttributeChangedSignal(SkipServiceShared.timer_attribute_name):Connect(function()
 		self:_timer_updated()
