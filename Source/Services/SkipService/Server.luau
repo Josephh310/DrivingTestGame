@@ -86,10 +86,42 @@ function SkipServiceServer.use_skip(self: SkipServiceServer, player: Player)
 	end)
 end
 
+function SkipServiceServer.go_forewards(self: SkipServiceServer, player: Player)
+	local changed = false
+	DataServiceServer:apply_change(player, { "current_stage" }, function(current_value: number)
+		local next_stage = current_value + 1
+		local best_stage = DataServiceServer:get_value(player, { "best_stage" })
+		if next_stage > best_stage then
+			return current_value
+		end
+		changed = true
+		return next_stage
+	end)
+	if changed then
+		VehicleServiceServer.networker:fire(player, "reset_vehicle_position")
+	end
+end
+
+function SkipServiceServer.go_backwards(self: SkipServiceServer, player: Player)
+	local changed = false
+	DataServiceServer:apply_change(player, { "current_stage" }, function(current_value: number)
+		if current_value <= 1 then
+			return current_value
+		end
+		changed = true
+		return current_value - 1
+	end)
+	if changed then
+		VehicleServiceServer.networker:fire(player, "reset_vehicle_position")
+	end
+end
+
 function SkipServiceServer.init(self: SkipServiceServer)
 	-- Expose use_skip to the client
 	self.networker = Networker.server.new("SkipService", self, {
 		self.use_skip,
+		self.go_forewards,
+		self.go_backwards,
 	})
 
 	-- Registed players already in the game
