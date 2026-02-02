@@ -18,10 +18,11 @@ local Observers = require(ReplicatedStorage.Packages.Observers)
 export type InterfaceController = typeof(InterfaceController)
 
 -- Functions
-function InterfaceController._set_reset_enabled(self: InterfaceController, state: boolean)
+function InterfaceController._set_coregui_rules(self: InterfaceController, state: boolean)
 	repeat
 		local success = pcall(function()
 			StarterGui:SetCore("ResetButtonCallback", state)
+			StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Health, false)
 		end)
 		task.wait()
 	until success
@@ -53,7 +54,7 @@ function InterfaceController.init(self: InterfaceController)
 	end
 
 	-- Disable reset button
-	self:_set_reset_enabled(false)
+	self:_set_coregui_rules(false)
 end
 
 return InterfaceController
