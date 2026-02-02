@@ -2,47 +2,21 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local VehicleServiceUtils = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceUtils)
 
+type PartsPool = {
+	[BasePart]: {
+		original_transparency: number,
+		original_can_collide: boolean,
+		touched_connection: RBXScriptConnection,
+	},
+}
+
 return function(obstacle: Model | BasePart)
 	-- Initialize the pool
 	-- This will allow for streaming compatibility, as parts can be streamed in and out the model
 	local is_on_cooldown = false
-	local parts_pool = {}
+	local parts_pool: PartsPool = {}
 
-	-- Hitbox generation
-	local hitbox = nil :: BasePart
-	if obstacle:IsA("Model") then
-		local cframe, size = obstacle:GetBoundingBox()
-		hitbox = Instance.new("Part")
-		hitbox.Size = size
-		hitbox.CFrame = cframe
-		hitbox.Transparency = 0.5
-		hitbox.Anchored = true
-		hitbox.CanCollide = false
-		hitbox.Parent = obstacle
-	end
-
-	-- Pool modification functions
-	local function add_part(part: BasePart)
-		-- Add the new part to the pool
-		table.insert(parts_pool, part)
-
-		-- Refresh the hitbox if a new part is added
-		if hitbox then
-			local cframe, size = obstacle:GetBoundingBox()
-			hitbox.CFrame = cframe
-			hitbox.Size = size
-		end
-	end
-
-	local function remove_part(part: BasePart)
-		local pool_index = table.find(parts_pool, part)
-		if pool_index then
-			table.remove(parts_pool, pool_index)
-		end
-	end
-
-	-- Hitbox touched connection
-	local touched_connection = hitbox.Touched:Connect(function(hit: BasePart)
+	local function on_touched(hit: BasePart)
 		-- Reject if the destructable is on cooldown
 		-- Avoid creating duplicate dummy destructables and doubling-up on damage
 		if is_on_cooldown then
@@ -81,7 +55,7 @@ return function(obstacle: Model | BasePart)
 		dummy.Parent = workspace.Debris
 
 		-- Hide real prop
-		for _, part in parts_pool do
+		for part, data in parts_pool do
 			part.Transparency = 1
 			part.CanCollide = false
 		end
@@ -112,23 +86,48 @@ return function(obstacle: Model | BasePart)
 			dummy:Destroy()
 
 			-- Show the real destructable
-			for _, part in parts_pool do
-				if part == hitbox then
-					continue
-				end
-				part.Transparency = 0
-				part.CanCollide = true
+			for part, data in parts_pool do
+				part.Transparency = data.original_transparency
+				part.CanCollide = data.original_can_collide
 			end
 
 			-- Take the destructable off-cooldown
 			is_on_cooldown = false
 		end)
-	end)
+	end
 
-	-- Get all parts currently in the obstacle and add them to the pool
+	-- Pool modification functions
+	local function add_part(part: BasePart)
+		-- Ensure part is actually a part
+		if not part:IsA("BasePart") then
+			return
+		end
+
+		-- Add new part data to the pool
+		parts_pool[part] = {
+			original_transparency = part.Transparency,
+			original_can_collide = part.CanCollide,
+			touched_connection = part.Touched:Connect(on_touched),
+		}
+	end
+
+	local function remove_part(part: BasePart)
+		local part_data = parts_pool[part]
+		if not part_data then
+			return
+		end
+		if part_data.touched_connection then
+			part_data.touched_connection:Disconnect()
+		end
+		parts_pool[part] = nil
+	end
+
+	-- If the tagged instance is a part rather than a model, we should include it in the parts pool.
 	if obstacle:IsA("BasePart") then
 		add_part(obstacle)
 	end
+
+	-- Add all descendants of type BasePart to the parts pool.
 	for _, part in obstacle:QueryDescendants("BasePart") do
 		add_part(part)
 	end
@@ -138,8 +137,14 @@ return function(obstacle: Model | BasePart)
 	local removed_connection = obstacle.DescendantRemoving:Connect(remove_part)
 
 	return function()
-		touched_connection:Disconnect()
+		-- Disconnect listeners
 		added_connection:Disconnect()
 		removed_connection:Disconnect()
+
+		-- Remove all parts from the parts pool
+		-- This will disconnect all .Touched connections.
+		for part, data in parts_pool do
+			remove_part(part)
+		end
 	end
 end
