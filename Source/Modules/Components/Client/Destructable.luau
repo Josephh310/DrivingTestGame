@@ -79,6 +79,11 @@ return function(obstacle: Model | BasePart)
 			part.Anchored = false
 		end
 
+		-- Impluse the dummy
+		local dummy_leader = dummy_parts[1] :: BasePart
+		local look_vector = hit.CFrame.LookVector * 100
+		dummy_leader:ApplyImpulse(look_vector)
+
 		-- Respawn the destructable after a delay and take it off cooldown
 		-- Destroy the dummy
 		task.delay(10, function()
