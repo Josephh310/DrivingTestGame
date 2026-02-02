@@ -137,6 +137,9 @@
             },
             "ModelReplicationTools": {
               "$path": "Source/Modules/Utilities/ModelReplicationTools.luau"
+            },
+            "PlaySoundFromPart": {
+              "$path": "Source/Modules/Utilities/PlaySoundFromPart.luau"
             }
           }
         }
