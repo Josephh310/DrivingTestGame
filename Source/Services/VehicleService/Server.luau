@@ -114,7 +114,7 @@ function VehicleServiceServer._setup_collisions(self: VehicleServiceServer, spaw
 	hitbox.Size = body.Size * 1.1
 	hitbox.CFrame = body.CFrame
 	hitbox.CanCollide = false
-	hitbox.Transparency = 0.5
+	hitbox.Transparency = 1
 	hitbox.Massless = true
 	hitbox.Parent = spawned_vehicle
 

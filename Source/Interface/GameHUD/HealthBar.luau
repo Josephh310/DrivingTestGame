@@ -46,7 +46,6 @@ function HealthBar._update_fill(current_health: number, max_health: number)
 end
 
 function HealthBar._player_damaged(amount: number, total_health: number)
-	PlaySoundFromPart(Player.Character.PrimaryPart, ReplicatedStorage.Assets.SoundEffects.ImpactSounds.DamageNoise)
 	if DamageTween.PlaybackState == Enum.PlaybackState.Playing then
 		DamageTween.Completed:Wait()
 	end
