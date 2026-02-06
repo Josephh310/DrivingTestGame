@@ -7,6 +7,12 @@
         "$className": "Folder",
         "Services": {
           "$className": "Folder",
+          "CameraService": {
+            "$className": "Folder",
+            "CameraServiceClient": {
+              "$path": "Source/Services/CameraService/Client.luau"
+            }
+          },
           "Conch": {
             "$className": "Folder",
             "ConchClient": {
@@ -161,6 +167,12 @@
           "$className": "Folder",
           "BadgeServiceServer": {
             "$path": "Source/Services/BadgeService/Server.luau"
+          }
+        },
+        "CameraService": {
+          "$className": "Folder",
+          "CameraServiceServer": {
+            "$path": "Source/Services/CameraService/Server.luau"
           }
         },
         "Conch": {
