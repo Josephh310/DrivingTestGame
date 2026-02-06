@@ -9,6 +9,19 @@ return function(hitbox: BasePart)
 		if not player then
 			return
 		end
+
+		-- Heal the player for finishing a stage
+		local character = player.Character or player.CharacterAdded:Wait()
+		if not character then
+			return
+		end
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if not humanoid then
+			return
+		end
+		humanoid.Health = humanoid.MaxHealth - 1
+		humanoid.Health = humanoid.MaxHealth
+
 		-- Check the player is in a vehicle
 		if not workspace.Vehicles:FindFirstChild(player.Name) then
 			return
