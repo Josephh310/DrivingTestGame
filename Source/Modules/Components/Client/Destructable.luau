@@ -1,6 +1,10 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local PlaySoundFromPart = require(ReplicatedStorage.Shared.Modules.Utilities.PlaySoundFromPart)
+local CameraServiceClient = require(ReplicatedStorage.Shared.Services.CameraService.CameraServiceClient)
 local VehicleServiceUtils = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceUtils)
+
+local ImpactSounds = ReplicatedStorage.Assets.SoundEffects.ImpactSounds:GetChildren()
 
 type PartsPool = {
 	[BasePart]: {
@@ -9,6 +13,12 @@ type PartsPool = {
 		touched_connection: RBXScriptConnection,
 	},
 }
+
+local function play_impact_sound(part: BasePart)
+	local random_index = math.random(1, #ImpactSounds)
+	local random_sound = ImpactSounds[random_index]
+	PlaySoundFromPart(part, random_sound)
+end
 
 return function(obstacle: Model | BasePart)
 	-- Initialize the pool
@@ -62,13 +72,21 @@ return function(obstacle: Model | BasePart)
 
 		-- Get all parts in the dummy
 		local dummy_parts = dummy:QueryDescendants("BasePart")
+		local dummy_leader = dummy_parts[1] :: BasePart
+
+		-- Play sound effect
+		play_impact_sound(dummy_leader)
+
+		-- Shake the camera
+		local shake_preset = obstacle:GetAttribute("ShakePreset") or "Bump"
+		CameraServiceClient:apply_shake(shake_preset)
 
 		-- Weld parts together so the model doesn't break apart
 		-- when unanchored
 		for _, part in dummy_parts do
 			local weld = Instance.new("WeldConstraint")
 			weld.Part0 = part
-			weld.Part1 = dummy_parts[1] -- Elect a random root part
+			weld.Part1 = dummy_leader -- Elect a random root part
 			weld.Parent = part
 		end
 
@@ -80,7 +98,6 @@ return function(obstacle: Model | BasePart)
 		end
 
 		-- Impluse the dummy
-		local dummy_leader = dummy_parts[1] :: BasePart
 		local look_vector = hit.CFrame.LookVector * 100
 		dummy_leader:ApplyImpulse(look_vector)
 
