@@ -9,6 +9,7 @@ local VehicleServiceClient = {}
 -- Dependencies
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local HealthBar = require(ReplicatedStorage.Interface.GameHUD.HealthBar)
 local VehicleServiceUtils = require(script.Parent.VehicleServiceUtils)
 local VehicleTypes = require(script.Parent.VehicleTypes)
 local Networker = require(ReplicatedStorage.Packages.Networker)
@@ -28,6 +29,7 @@ function VehicleServiceClient.cleanup()
 	for _, fn in Cleanup do
 		fn()
 	end
+	HealthBar.set_enabled(false)
 end
 
 function VehicleServiceClient._force_sit(self: VehicleServiceClient)
@@ -87,6 +89,9 @@ function VehicleServiceClient.setup_vehicle(self: VehicleServiceClient, vehicle_
 
 	-- Set up the component
 	self:_setup_components(vehicle_name, spawned_model)
+
+	-- Enable teh health bar
+	HealthBar.set_enabled(true)
 end
 
 function VehicleServiceClient.init(self: VehicleServiceClient)

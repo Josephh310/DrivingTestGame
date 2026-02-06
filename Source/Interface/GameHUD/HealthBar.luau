@@ -79,14 +79,17 @@ function HealthBar._character_added(character: Model)
 		local current_health = humanoid.Health
 		HealthBar._update_fill(current_health, humanoid.MaxHealth)
 		-- Special cases
+		-- Player has been damaged
 		if current_health < old_health then
-			-- Player has been damaged
-			local damage_dealt = old_health - current_health
-			HealthBar._player_damaged(damage_dealt, humanoid.MaxHealth)
+			-- If the player's current health is their maximum, then they have not actually been damaged
+			if current_health == humanoid.MaxHealth then
+				return
+			end
+			-- Get the damage dealt and process
+			HealthBar._player_damaged(old_health - current_health, humanoid.MaxHealth)
 		else
 			-- Player has been healed
-			local damage_healed = current_health - old_health
-			HealthBar._player_healed(damage_healed, humanoid.MaxHealth)
+			HealthBar._player_healed(current_health - old_health, humanoid.MaxHealth)
 		end
 		old_health = current_health
 	end)
@@ -95,6 +98,15 @@ end
 
 function HealthBar.set_enabled(enabled: boolean)
 	HealthBar.enabled = enabled
+	HealthBarFrame.Visible = enabled
+	if enabled then
+		local character = Player.Character or Player.CharacterAdded:Wait()
+		local humanoid = character:FindFirstChildOfClass("Humanoid")
+		if not humanoid then
+			return
+		end
+		HealthBar._update_fill(humanoid.Health, humanoid.MaxHealth)
+	end
 end
 
 function HealthBar.init()
