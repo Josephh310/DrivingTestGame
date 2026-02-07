@@ -384,11 +384,13 @@ function VehicleServiceServer.init(self: VehicleServiceServer)
 
 	local function player_added(player: Player)
 		Cleanup[player] = {}
-		local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
-		local stage = DataServiceServer:get_value(player, { "current_stage" })
-		if VehicleTypes[equipped_vehicle] ~= nil then
-			self:_spawn_vehicle_at_stage(player, stage)
-		end
+		player.CharacterAdded:Connect(function()
+			local equipped_vehicle = DataServiceServer:get_value(player, { "equipped_vehicle" })
+			local stage = DataServiceServer:get_value(player, { "current_stage" })
+			if VehicleTypes[equipped_vehicle] ~= nil then
+				self:_spawn_vehicle_at_stage(player, stage)
+			end
+		end)
 	end
 
 	-- Vehicle removal logic
