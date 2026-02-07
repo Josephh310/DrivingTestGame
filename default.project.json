@@ -271,6 +271,9 @@
             },
             "VehicleSpawn": {
               "$path": "Source/Modules/Components/Server/VehicleSpawn.luau"
+            },
+            "VehicleSpawner": {
+              "$path": "Source/Modules/Components/Server/VehicleSpawner.luau"
             }
           }
         }
