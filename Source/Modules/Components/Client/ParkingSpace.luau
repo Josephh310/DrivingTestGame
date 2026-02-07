@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Observers = require(ReplicatedStorage.Packages.Observers)
-local Fireworks = require(ReplicatedStorage.Shared.Modules.Utilities.Fireworks)
 local VehicleServiceUtils = require(ReplicatedStorage.Shared.Services.VehicleService.VehicleServiceUtils)
 
 return function(root: BasePart)
@@ -71,7 +70,6 @@ return function(root: BasePart)
 
 		-- Check
 		if parking_success then
-			Fireworks.launch_fireworks(root.CFrame)
 			values.BorderColor.Value = Color3.fromRGB(0, 255, 0)
 			values.Activated.Value = true
 		end
