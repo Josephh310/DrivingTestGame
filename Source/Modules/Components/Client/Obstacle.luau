@@ -27,8 +27,8 @@ return function(obstacle: Model | BasePart)
 	local parts_pool: PartsPool = {}
 
 	local function on_touched(hit: BasePart)
-		-- Reject if the destructable is on cooldown
-		-- Avoid creating duplicate dummy destructables and doubling-up on damage
+		-- Reject if the obstacle is on cooldown
+		-- Avoid creating duplicate dummy obstacles and doubling-up on damage
 		if is_on_cooldown then
 			return
 		end
@@ -44,11 +44,11 @@ return function(obstacle: Model | BasePart)
 			return
 		end
 
-		-- Put destructable on cooldown so it cannot be destroyed again
+		-- Put obstacle on cooldown so it cannot be destroyed again
 		is_on_cooldown = true
 
 		-- Get the player's humanoid
-		-- If it exists and the destructable has damage set up, deal the damage
+		-- If it exists and the obstacle has damage set up, deal the damage
 		if player and player.Character then
 			local humanoid = player.Character:FindFirstChildWhichIsA("Humanoid")
 			local damage = obstacle:GetAttribute("Damage")
@@ -58,9 +58,18 @@ return function(obstacle: Model | BasePart)
 			end
 		end
 
+		-- If the object is not destructable, our job is done
+		-- Add a slight debounce to avoid damage stacking
+		if obstacle:GetAttribute("Destructable") ~= true then
+			task.delay(1, function()
+				is_on_cooldown = false
+			end)
+			return
+		end
+
 		-- Create a dummy prop
 		local dummy = obstacle:Clone()
-		dummy:RemoveTag("Destructable")
+		dummy:RemoveTag("Obstacle")
 		dummy.Name = `{obstacle.Name} Dummy`
 		dummy.Parent = workspace.Debris
 
@@ -101,19 +110,19 @@ return function(obstacle: Model | BasePart)
 		local look_vector = hit.CFrame.LookVector * 100
 		dummy_leader:ApplyImpulse(look_vector)
 
-		-- Respawn the destructable after a delay and take it off cooldown
+		-- Respawn the obstacle after a delay and take it off cooldown
 		-- Destroy the dummy
 		task.delay(10, function()
 			-- Remove the dummy
 			dummy:Destroy()
 
-			-- Show the real destructable
+			-- Show the real obstacle
 			for part, data in parts_pool do
 				part.Transparency = data.original_transparency
 				part.CanCollide = data.original_can_collide
 			end
 
-			-- Take the destructable off-cooldown
+			-- Take the obstacle off-cooldown
 			is_on_cooldown = false
 		end)
 	end
