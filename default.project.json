@@ -122,8 +122,11 @@
               "CheckpointHitbox": {
                 "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
               },
-              "Destructable": {
-                "$path": "Source/Modules/Components/Client/Destructable.luau"
+              "Obstacle": {
+                "$path": "Source/Modules/Components/Client/Obstacle.luau"
+              },
+              "OpenOnTouch": {
+                "$path": "Source/Modules/Components/Client/OpenOnTouch.luau"
               },
               "ParkingSpace": {
                 "$path": "Source/Modules/Components/Client/ParkingSpace.luau"
@@ -268,6 +271,9 @@
             },
             "VehicleSpawn": {
               "$path": "Source/Modules/Components/Server/VehicleSpawn.luau"
+            },
+            "VehicleSpawner": {
+              "$path": "Source/Modules/Components/Server/VehicleSpawner.luau"
             }
           }
         }

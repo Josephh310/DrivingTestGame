@@ -1,5 +1,7 @@
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Observers = require(ReplicatedStorage.Packages.Observers)
+local Fireworks = require(ReplicatedStorage.Shared.Modules.Utilities.Fireworks)
 
 return function(hitbox: BasePart)
 	-- Cleanup
@@ -44,6 +46,11 @@ return function(hitbox: BasePart)
 				end
 				if values_true == 0 then
 					hitbox:SetAttribute("is_open", true)
+					local character = Players.LocalPlayer.Character
+					if not character then
+						return
+					end
+					Fireworks.launch_fireworks(character.PrimaryPart.CFrame)
 				else
 					hitbox:SetAttribute("is_open", false)
 				end
