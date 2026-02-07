@@ -32,6 +32,10 @@ return function(hitbox: BasePart)
 		activated_value.Value = true
 	end)
 
+	-- In the workspace, transparency is 0.5 for edit-time clarity
+	-- We want the part to be transparent at runtime.
+	hitbox.Transparency = 1
+
 	return function()
 		touched_connection:Disconnect()
 	end
