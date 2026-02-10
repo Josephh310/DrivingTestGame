@@ -122,6 +122,9 @@
               "CheckpointHitbox": {
                 "$path": "Source/Modules/Components/Client/CheckpointHitbox.luau"
               },
+              "DarknessZone": {
+                "$path": "Source/Modules/Components/Client/DarknessZone.luau"
+              },
               "Obstacle": {
                 "$path": "Source/Modules/Components/Client/Obstacle.luau"
               },
