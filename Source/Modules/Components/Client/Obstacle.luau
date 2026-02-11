@@ -79,9 +79,16 @@ return function(obstacle: Model | BasePart)
 			part.CanCollide = false
 		end
 
+		-- Check for any special cases
+		for _, instance in obstacle:GetDescendants() do
+			if instance:IsA("Beam") or instance:IsA("SurfaceLight") then
+				instance.Enabled = false
+			end
+		end
+
 		-- Get all parts in the dummy
 		local dummy_parts = dummy:QueryDescendants("BasePart")
-		local dummy_leader = dummy_parts[1] :: BasePart
+		local dummy_leader = (dummy_parts[1] or obstacle) :: BasePart
 
 		-- Play sound effect
 		play_impact_sound(dummy_leader)
@@ -120,6 +127,13 @@ return function(obstacle: Model | BasePart)
 			for part, data in parts_pool do
 				part.Transparency = data.original_transparency
 				part.CanCollide = data.original_can_collide
+			end
+
+			-- Check for any special cases
+			for _, instance in obstacle:GetDescendants() do
+				if instance:IsA("Beam") or instance:IsA("SurfaceLight") then
+					instance.Enabled = true
+				end
 			end
 
 			-- Take the obstacle off-cooldown
