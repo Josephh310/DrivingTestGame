@@ -12,7 +12,7 @@ return function(zone_part: BasePart)
 		ClockTime = Lighting.ClockTime,
 	})
 	local tween_to_night = TweenService:Create(Lighting, TweenInfo.new(1), {
-		ClockTime = 24.00,
+		ClockTime = 18.45,
 	})
 
 	-- Construct a new zone
