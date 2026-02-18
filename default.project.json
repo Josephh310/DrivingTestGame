@@ -125,8 +125,11 @@
               "DarknessZone": {
                 "$path": "Source/Modules/Components/Client/DarknessZone.luau"
               },
+              "NPCSpawner": {
+                "$path": "Source/Modules/Components/Client/NPCSpawner.luau"
+              },
               "Obstacle": {
-                "$path": "Source/Modules/Components/Client/Obstacle.luau"
+                "$path": "Source/Modules/Components/Client/Obstacle"
               },
               "OpenOnTouch": {
                 "$path": "Source/Modules/Components/Client/OpenOnTouch.luau"
