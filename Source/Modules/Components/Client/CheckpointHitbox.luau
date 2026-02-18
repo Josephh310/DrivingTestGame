@@ -33,12 +33,14 @@ return function(hitbox: BasePart)
 			if not object_value:IsA("ObjectValue") then
 				continue
 			end
-			local boolean_value = object_value.Value
-			if not boolean_value:IsA("BoolValue") then
+			if not object_value.Value then
+				object_value:GetPropertyChangedSignal("Value"):Wait()
+			end
+			if not object_value.Value:IsA("BoolValue") then
 				continue
 			end
 			values_registered += 1
-			observers[#observers + 1] = Observers.observeProperty(boolean_value, "Value", function(value: boolean)
+			observers[#observers + 1] = Observers.observeProperty(object_value.Value, "Value", function(value: boolean)
 				if value == true then
 					values_true += 1
 				else
