@@ -76,16 +76,14 @@ function VehicleServiceClient.reset_vehicle_position(self: VehicleServiceClient)
 	vehicle:PivotTo(new_cframe)
 end
 
-function VehicleServiceClient.setup_vehicle(self: VehicleServiceClient, vehicle_name: string, spawned_model: Model)
+function VehicleServiceClient.setup_vehicle(self: VehicleServiceClient, vehicle_name: string)
 	-- Sit the player and disable jumping
 	-- Returns a function to allow the player to jump again, add to cleanup to call it when a player's vehicle is removed
 	local jump_again = self:_force_sit()
 	Cleanup[#Cleanup + 1] = jump_again
 
 	-- Wait for the model to fully replicate
-	if not spawned_model.PrimaryPart then
-		spawned_model:GetPropertyChangedSignal("PrimaryPart"):Wait()
-	end
+	local spawned_model = workspace.Vehicles:WaitForChild(Player.Name)
 
 	-- Set up the component
 	self:_setup_components(vehicle_name, spawned_model)

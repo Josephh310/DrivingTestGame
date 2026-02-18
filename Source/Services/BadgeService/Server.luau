@@ -47,7 +47,6 @@ function BadgeServiceServer.award_badge(self: BadgeServiceServer, player: Player
 	-- Add the badge to the player's data
 	DataServiceServer:apply_change(player, { "badges" }, function(current: { number })
 		table.insert(current, badge_id)
-		print(game.HttpService:JSONEncode(current))
 		return current
 	end)
 end
