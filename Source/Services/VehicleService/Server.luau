@@ -252,7 +252,7 @@ function VehicleServiceServer._spawn_vehicle(
 	self:_force_sit(player, new_vehicle)
 
 	-- Notify the player
-	self.networker:fire(player, "setup_vehicle", equipped_vehicle, new_vehicle)
+	self.networker:fire(player, "setup_vehicle", equipped_vehicle)
 end
 
 -- Public functions
