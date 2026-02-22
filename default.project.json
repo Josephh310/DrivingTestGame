@@ -139,6 +139,9 @@
               },
               "ParkingSpace": {
                 "$path": "Source/Modules/Components/Client/ParkingSpace.luau"
+              },
+              "ProximityPrompt": {
+                "$path": "Source/Modules/Components/Client/ProximityPrompt.luau"
               }
             }
           },
