@@ -125,6 +125,9 @@
               "DarknessZone": {
                 "$path": "Source/Modules/Components/Client/DarknessZone.luau"
               },
+              "MovingPart": {
+                "$path": "Source/Modules/Components/Client/MovingPart.luau"
+              },
               "NPCSpawner": {
                 "$path": "Source/Modules/Components/Client/NPCSpawner.luau"
               },
@@ -136,6 +139,9 @@
               },
               "ParkingSpace": {
                 "$path": "Source/Modules/Components/Client/ParkingSpace.luau"
+              },
+              "ProximityPrompt": {
+                "$path": "Source/Modules/Components/Client/ProximityPrompt.luau"
               }
             }
           },
@@ -149,9 +155,6 @@
             },
             "HSVColorWheel": {
               "$path": "Source/Modules/Utilities/HSVColorWheel.luau"
-            },
-            "ModelReplicationTools": {
-              "$path": "Source/Modules/Utilities/ModelReplicationTools.luau"
             },
             "PlaySoundFromPart": {
               "$path": "Source/Modules/Utilities/PlaySoundFromPart.luau"
@@ -272,14 +275,26 @@
           "$className": "Folder",
           "Server": {
             "$className": "Folder",
+            "Barrier": {
+              "$path": "Source/Modules/Components/Server/Barrier.luau"
+            },
             "CheckpointHitbox": {
               "$path": "Source/Modules/Components/Server/CheckpointHitbox.luau"
+            },
+            "RandomMover": {
+              "$path": "Source/Modules/Components/Server/RandomMover.luau"
+            },
+            "TrainSpawner": {
+              "$path": "Source/Modules/Components/Server/TrainSpawner.luau"
             },
             "VehicleSpawn": {
               "$path": "Source/Modules/Components/Server/VehicleSpawn.luau"
             },
             "VehicleSpawner": {
               "$path": "Source/Modules/Components/Server/VehicleSpawner.luau"
+            },
+            "WorldButton": {
+              "$path": "Source/Modules/Components/Server/WorldButton.luau"
             }
           }
         }

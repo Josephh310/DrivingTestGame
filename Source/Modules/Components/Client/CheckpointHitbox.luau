@@ -3,14 +3,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Observers = require(ReplicatedStorage.Packages.Observers)
 local Fireworks = require(ReplicatedStorage.Shared.Modules.Utilities.Fireworks)
 
+local DEFAULT_ACTIVATED_SUM = 0
+
 return function(hitbox: BasePart)
 	-- Cleanup
 	local observers = {}
 
-	-- Reconcile attributes
-	if not hitbox:GetAttribute("is_open") then
-		hitbox:SetAttribute("is_open", false)
-	end
+	-- Attributes
+	local activated_sum = hitbox:GetAttribute("ActivatedSum") or DEFAULT_ACTIVATED_SUM
+
 	-- Observe is_open, changes based on obby objectives
 	observers[#observers + 1] = Observers.observeAttribute(hitbox, "is_open", function()
 		local is_open = hitbox:GetAttribute("is_open")
@@ -46,7 +47,7 @@ return function(hitbox: BasePart)
 				else
 					values_true -= 1
 				end
-				if values_true == 0 then
+				if values_true == activated_sum then
 					hitbox:SetAttribute("is_open", true)
 					local character = Players.LocalPlayer.Character
 					if not character then
