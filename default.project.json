@@ -125,6 +125,9 @@
               "DarknessZone": {
                 "$path": "Source/Modules/Components/Client/DarknessZone.luau"
               },
+              "MovingPart": {
+                "$path": "Source/Modules/Components/Client/MovingPart.luau"
+              },
               "NPCSpawner": {
                 "$path": "Source/Modules/Components/Client/NPCSpawner.luau"
               },
