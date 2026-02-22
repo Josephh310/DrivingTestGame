@@ -275,6 +275,9 @@
           "$className": "Folder",
           "Server": {
             "$className": "Folder",
+            "Barrier": {
+              "$path": "Source/Modules/Components/Server/Barrier.luau"
+            },
             "CheckpointHitbox": {
               "$path": "Source/Modules/Components/Server/CheckpointHitbox.luau"
             },
