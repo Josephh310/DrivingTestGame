@@ -281,6 +281,9 @@
             "CheckpointHitbox": {
               "$path": "Source/Modules/Components/Server/CheckpointHitbox.luau"
             },
+            "RandomMover": {
+              "$path": "Source/Modules/Components/Server/RandomMover.luau"
+            },
             "TrainSpawner": {
               "$path": "Source/Modules/Components/Server/TrainSpawner.luau"
             },
