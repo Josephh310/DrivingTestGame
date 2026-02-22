@@ -286,6 +286,9 @@
             },
             "VehicleSpawner": {
               "$path": "Source/Modules/Components/Server/VehicleSpawner.luau"
+            },
+            "WorldButton": {
+              "$path": "Source/Modules/Components/Server/WorldButton.luau"
             }
           }
         }
